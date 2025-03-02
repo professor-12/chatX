@@ -7,6 +7,7 @@ import { useActionState } from "react";
 
 export default function Home() {
   const [state, action] = useActionState(createuser as any, { email: "", password: "", name: "" })
+  console.log(state)
 
   return (
     <div className="bg-background  h-screen">
