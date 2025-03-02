@@ -21,6 +21,11 @@ model User {
   accounts Account[]
   profile Profile?
   sessions Session[]
+  messagesent Message[] @relation("sender")
+  messagereceived Message[] @relation("receiver")
+
+  Contacts Contact[] @relation(name: "userRelation")
+  usercontact Contact[] @relation(name: "contactRelation")
 }
 
 
@@ -46,6 +51,7 @@ model Session {
   createdAt   DateTime @default(now())
 
   @@index([userId]) 
+
 }
 
 model Profile {
@@ -55,7 +61,6 @@ model Profile {
   profilePics String?
   phoneNumber String?
   gender Gender?
-
   userId String @unique
   user User @relation(fields: [userId],references: [id])
 }
@@ -63,4 +68,24 @@ model Profile {
 enum  Gender {
   MALE 
   FEMALE
+}
+
+model Message {
+  id String @map("_id") @id @default(cuid())
+  senderId String @unique
+  receiverId String @unique
+  picture String?
+  message String?
+  createdAt DateTime @default(now())
+  editedAt DateTime?
+  sender User @relation(fields: [senderId], references: [id],name: "sender")
+  receiver User @relation(fields: [receiverId], references: [id],name: "receiver")
+}
+
+model Contact {
+  id String @map("_id") @id @default(cuid())
+  userId String @unique
+  contactId String @unique
+  contact User @relation(fields: [contactId], references: [id], name: "contactRelation")
+  user User @relation(fields: [userId], references: [id], name: "userRelation")
 }

@@ -159,22 +159,38 @@ export const loginuser = async (prevstate: User, data: FormData) => {
     }
     redirect("/");
 };
-
-export const checkAuth = async (prevstate: User, data: FormData) => {
+export const checkAuth = async (): Promise<{
+    error: string | null;
+    data: string | null;
+}> => {
     try {
         const token = (await cookies()).get("token");
         if (!token?.value) {
             return { error: "Unauthorized", data: null };
         }
-        const { sessionId } = verifyToken(token.value as string) as any;
+
+        const { sessionId } = verifyToken(token.value as string) as {
+            sessionId: string;
+        };
+        if (!sessionId) {
+            return { error: "Invalid token", data: null };
+        }
+
         const session = await prisma.session.findUnique({
             where: { id: sessionId },
         });
+
         if (!session) {
-            return { error: "Unauthorized", data: null };
+            return { error: "Session not found", data: null };
         }
-        return { error: null, data: "Authorized" };
+
+        if (new Date(session.expiresAt).getTime() < Date.now()) {
+            return { error: "Session expired", data: null };
+        }
+
+        return { error: null, data: session.userId };
     } catch (err: any) {
+        console.error("Auth error:", err.message);
         return { error: "Unauthorized", data: null };
     }
 };
