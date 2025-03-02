@@ -96,12 +96,10 @@ export const createuser = async (prevstate: User, data: FormData) => {
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
         });
-
-        // return { error: null, data: "Signup successfully!" };
-        redirect("/");
     } catch (err: any) {
         return { error: err.message, data: null };
     }
+    redirect("/");
 };
 
 export const loginuser = async (prevstate: User, data: FormData) => {

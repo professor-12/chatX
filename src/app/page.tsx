@@ -1,22 +1,44 @@
 "use client"
-import useForm from "@/hooks/useForm";
-import Image from "next/image";
-import Form from "../components/form";
-import { createuser } from "@/lib/_server/auth";
-import { useActionState } from "react";
+
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [state, action] = useActionState(createuser as any, { email: "", password: "", name: "" })
-  console.log(state)
-
+  const router = useRouter()
+  const [loading, setIsLoading] = useState(true)
+  useEffect(() => {
+    setIsLoading(true)
+    const fn = async () => {
+      await new Promise((resolve) => { setTimeout(() => { resolve("messag") }, 4000) })
+    }
+    fn()
+    router.push("home")
+  }, [])
   return (
     <div className="bg-background  h-screen">
-      <form action={action} className="*:block">
-        <input type="text" name="name" />
-        <input type="password" placeholder="Password" name="password" />
-        <input type="email" placeholder="Your Email" name="email" />
-        <button name="submit">Createusr</button>
-      </form>
+      {
+        loading ? <div className="flex items-center justify-center h-full"><svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide animate-spin lucide-loader"
+        >
+          <path d="M12 2v4" />
+          <path d="m16.2 7.8 2.9-2.9" />
+          <path d="M18 12h4" />
+          <path d="m16.2 16.2 2.9 2.9" />
+          <path d="M12 18v4" />
+          <path d="m4.9 19.1 2.9-2.9" />
+          <path d="M2 12h4" />
+          <path d="m4.9 4.9 2.9 2.9" />
+        </svg></div> : <div className="flex items-center justify-center h-full">Loaded</div>
+      }
     </div>
   );
 }
