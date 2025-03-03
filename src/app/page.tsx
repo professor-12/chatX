@@ -1,5 +1,6 @@
 "use client"
 
+import { checkAuth } from "@/lib/_server/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -9,10 +10,14 @@ export default function Home() {
   useEffect(() => {
     setIsLoading(true)
     const fn = async () => {
-      await new Promise((resolve) => { setTimeout(() => { resolve("messag") }, 4000) })
+      const { data, error } = await checkAuth()
+      if (error) {
+        return router.replace("/login")
+      }
+      return router.push("/home")
     }
     fn()
-    router.push("home")
+
   }, [])
   return (
     <div className="bg-background  h-screen">
@@ -37,7 +42,8 @@ export default function Home() {
           <path d="m4.9 19.1 2.9-2.9" />
           <path d="M2 12h4" />
           <path d="m4.9 4.9 2.9 2.9" />
-        </svg></div> : <div className="flex items-center justify-center h-full">Loaded</div>
+        </svg>
+        </div> : <div className="flex items-center justify-center h-full">Loaded</div>
       }
     </div>
   );

@@ -29,7 +29,6 @@ model User {
 }
 
 
-
 model Account {
   id String @map("_id") @id @default(cuid()) 
   providerName String
@@ -46,7 +45,7 @@ model Session {
   id String @map("_id") @id @default(cuid())
   userId      String 
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  token       String   @unique
+
   expiresAt   DateTime
   createdAt   DateTime @default(now())
 
@@ -82,6 +81,7 @@ model Message {
   receiver User @relation(fields: [receiverId], references: [id],name: "receiver")
 }
 
+
 model Contact {
   id String @map("_id") @id @default(cuid())
   userId String @unique
@@ -89,3 +89,4 @@ model Contact {
   contact User @relation(fields: [contactId], references: [id], name: "contactRelation")
   user User @relation(fields: [userId], references: [id], name: "userRelation")
 }
+

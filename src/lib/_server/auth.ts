@@ -3,9 +3,8 @@ import bcrypt from "bcrypt";
 import prisma from "../prisma";
 import { generateToken, verifyPassword, verifyToken } from "./utils";
 import { cookies } from "next/headers";
-import { redirect, RedirectType } from "next/navigation";
-import { error } from "console";
-import { RedirectStatusCode } from "next/dist/client/components/redirect-status-code";
+import { redirect } from "next/navigation";
+import { ERROR_CONSTANT } from "../../constants/error";
 
 interface User {
     email: string;
@@ -74,6 +73,11 @@ export const createuser = async (prevstate: User, data: FormData) => {
                 email,
                 password: hashedPassword,
                 name: username,
+                profile: {
+                    create: {
+                        username: "",
+                    },
+                },
             },
         });
         const { password: _, ...safeUser } = user;
@@ -135,12 +139,11 @@ export const loginuser = async (prevstate: User, data: FormData) => {
                 data: null,
             };
         }
-        const _token = generateToken({ userId: user.id }, { expiresIn: "7d" });
+
         const session = await prisma.session.create({
             data: {
                 userId: user.id,
                 expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-                token: _token,
             },
         });
         const token = generateToken(
@@ -154,8 +157,7 @@ export const loginuser = async (prevstate: User, data: FormData) => {
             sameSite: "strict",
         });
     } catch (err: any) {
-        console.log(err);
-        return { error: "An error occured please try again later", data: null };
+        return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
     redirect("/");
 };
@@ -166,28 +168,26 @@ export const checkAuth = async (): Promise<{
     try {
         const token = (await cookies()).get("token");
         if (!token?.value) {
-            return { error: "Unauthorized", data: null };
+            return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
         }
 
         const { sessionId } = verifyToken(token.value as string) as {
             sessionId: string;
         };
         if (!sessionId) {
-            return { error: "Invalid token", data: null };
+            return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
         }
-
         const session = await prisma.session.findUnique({
             where: { id: sessionId },
         });
 
         if (!session) {
-            return { error: "Session not found", data: null };
+            return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
         }
-
+        // Check session  has expired
         if (new Date(session.expiresAt).getTime() < Date.now()) {
             return { error: "Session expired", data: null };
         }
-
         return { error: null, data: session.userId };
     } catch (err: any) {
         console.error("Auth error:", err.message);
