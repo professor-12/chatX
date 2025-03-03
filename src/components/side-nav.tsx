@@ -13,7 +13,6 @@ const links = [
 
 const SideNav = () => {
       const { activeTab } = useTabContext()
-      const isActive = 1
       return (
             <aside className="w-full text-white/60 px-3 flex flex-col h-screen    py-6">
                   <div className='flex justify-center'>
@@ -25,7 +24,6 @@ const SideNav = () => {
                               {
                                     new Array(4).fill(null).map((_, index) => {
                                           const isActive = (links[index].href.split("/")[2] || "home") === (activeTab || "home");
-                                          console.log((activeTab || "home"), links[index].href.split("/")[2])
                                           return (
                                                 <Link href={links[index].href} key={index} className='relative group'>
                                                       <li key={index} className={`!text-white/60 ${isActive && "bg-primary/10"} duration-100 transition-all  p-3 hover:bg-primary/20  cursor-pointer rounded-xl`}>

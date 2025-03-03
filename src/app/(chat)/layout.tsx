@@ -4,7 +4,6 @@ import TabComponent from '@/context/TabContext'
 import React, { FC, ReactNode } from 'react'
 
 const Layout: FC<{ children: ReactNode }> = async (props) => {
-
       return (
             <TabComponent>
                   <div className='w-full flex h-screen  overflow-hidden relative'>
@@ -12,9 +11,8 @@ const Layout: FC<{ children: ReactNode }> = async (props) => {
                         <div className='h-full w-[80px]   bg-accent dark:bg-accent/45 border-r'>
                               <SideNav />
                         </div>
-
                         {/* Users */}
-                        <div className='h-full flex-1 bg-card border-r'>
+                        <div className='h-full max-w-[27rem] flex-1 bg-card border-r'>
                               <TabContainer />
                         </div>
                         <div className='h-full flex-[3] bg-card border-r'>
