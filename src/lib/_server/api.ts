@@ -52,8 +52,14 @@ export const allUser = async () => {
         return { error: null };
     }
     const __ = await prisma.user.findMany({
+        where: {
+            NOT: {
+                id: data,
+            },
+        },
         include: { profile: true },
         omit: { password: true },
+        orderBy: { createdAt: "desc" },
     });
 
     return { data: __ };
@@ -113,14 +119,56 @@ export const getChats = async () => {
     }
 
     try {
-        const allChats = prisma.message.findMany({
-            where: {
-                OR: [{ receiverId: data }, { senderId: data }],
+        const recentChats = await prisma.message.findMany({
+            distinct: ["senderId", "receiverId"],
+            orderBy: {
+                createdAt: "desc",
+            },
+            include: {
+                sender: {
+                    omit: { password: true },
+                    include: { profile: true },
+                },
+                receiver: {
+                    omit: { password: true },
+                    include: { profile: true },
+                },
             },
         });
 
-        return { data: allChats };
+        const __ = recentChats.map((chat) => {
+            const isSender = (chat.senderId as string) === (data as string);
+            const contact = isSender ? chat.receiver : chat.sender;
+
+            return {
+                id: contact?.id || "group", // Use group ID if needed
+                name: contact?.name || "Unknown", // Fallback in case of no user
+                avatar: contact?.profile?.profilePics || "/default-avatar.png", // Default avatar
+                lastMessage: chat?.message || "Sent an image",
+                time: chat.createdAt,
+            };
+        });
+        return { data: __ };
     } catch (err) {
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
+    }
+};
+
+export const addToContact = async (id: string) => {
+    const { data, error } = await checkAuth();
+
+    if (error) {
+        return { error, data };
+    }
+    try {
+        const usercontact = await prisma.contact.create({
+            data: {
+                contactId: id,
+                userId: data as string,
+            },
+        });
+        return { data: "Message created successfully", error: null };
+    } catch (err) {
+        return { error: "An error occured", data: null };
     }
 };

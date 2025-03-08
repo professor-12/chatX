@@ -6,7 +6,7 @@ const authRestrictedRoutes = ["/login", "/signup"];
 
 export async function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
-    const token = request.cookies.get("token")?.value; 
+    const token = request.cookies.get("token")?.value;
 
     if (authRestrictedRoutes.some((route) => path.startsWith(route)) && token) {
         return NextResponse.redirect(new URL("/home", request.url));

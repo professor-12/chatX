@@ -16,7 +16,7 @@ const SideNav = () => {
       return (
             <aside className="w-full text-white/60 px-3 flex flex-col h-screen    py-6">
                   <div className='flex justify-center'>
-                        <div className='w-[34px]  flex items-center aspect-square rounded-full ring bg-card'></div>
+                        <div className='w-[40px]  flex items-center aspect-square rounded-full ring bg-card'></div>
                   </div>
                   <div className='w-full h-px bg-slate-500/30 mt-4'></div>
                   <div className='flex flex-col flex-1 justify-between'>

@@ -1,14 +1,15 @@
 "use client"
-import { getContact, getUser } from '@/lib/_server/api'
+import { getChats, getContact, getUser } from '@/lib/_server/api'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 
 const Chat = () => {
       const { data, isPending } = useQuery({
-            queryFn: getContact,
+            queryFn: getChats,
             queryKey: ["get-client"]
       })
 
+      console.log(data?.data)
       return (
             <div className='h-full flex flex-col'>
                   <div className='flex justify-between items-center'>
@@ -41,10 +42,8 @@ const Chat = () => {
                                           </svg>
                                     </div>
                                     : data?.data?.length == 0 ? "No Chats found" :
-
-
-                                          new Array(8).fill(null).map((_, index) => {
-                                                return <ChatCard key={index} contact={{}} />
+                                          data?.data?.map((_, index) => {
+                                                return <ChatCard key={index} contact={_} />
                                           })
                         }
 
@@ -66,11 +65,13 @@ export const ChatCard = ({ contact }: { contact: any }) => {
                               className='w-14 border border-border h-14 rounded-full'
                         />
                         <div className='ml-4'>
-                              <h1 className='text-lg'>{contact?.name}</h1>
+                              <h1 className='text-lg truncate'>{contact?.name}</h1>
                               <div className='flex w-full items-center  gap-2'>
-                                    <p className='text-sm text-gray-400 truncate max-w-[60%]'>aasc ascs ascsascaacs acs asc</p>
+                                    <p className='text-sm text-gray-400 truncate max-w-[60%]'>{contact?.lastMessage}</p>
                                     <div className='w-[0.3rem] h-[0.3rem] rounded-full bg-slate-500'></div>
-                                    <p className='text-sm text-gray-400 truncate'>Tue</p>
+                                    <p className='text-sm text-gray-400 truncate'>{
+                                          new Intl.DateTimeFormat().format(contact.time as Date)
+                                    }</p>
                               </div>
                         </div>
                   </div>

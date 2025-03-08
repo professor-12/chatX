@@ -22,14 +22,13 @@ const initialData = {
 };
 
 const SignUp = () => {
-      const router = useRouter()
       const [state, action, isPending] = useActionState<typeof initialData>(
             createuser as any,
             initialData
       );
       return (
             <div className="flex dark:text-white text-black items-center flex-1">
-                  <form action={action} className="w-full sm:px-8 space-y-4">
+                  <form action={action} className="w-full sm:px-8 max-lg:max-w-[40rem] mx-auto space-y-4">
                         <h1 className="text-white text-[26px] mb-4 font-medium tracking-wide">
                               Sign up
                         </h1>

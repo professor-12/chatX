@@ -55,9 +55,9 @@ model Session {
 
 model Profile {
   id String @map("_id") @id @default(cuid())
-  username String @unique
+  username String?
   address String?
-  profilePics String?
+  profilePics String? @default("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRony1PUEAFW_rKWuriSeChlMZK05SNCoyhblOQpH5tBq1m5C_HHsKEJvveSdHRdSj_zJ4&usqp=CAU")
   phoneNumber String?
   gender Gender?
   userId String @unique
@@ -90,3 +90,7 @@ model Contact {
   user User @relation(fields: [userId], references: [id], name: "userRelation")
 }
 
+
+model Conversation {
+ id String @map("_id") @id @default(cuid())
+}

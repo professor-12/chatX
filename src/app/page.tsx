@@ -17,7 +17,6 @@ export default function Home() {
       return router.push("/home")
     }
     fn()
-
   }, [])
   return (
     <div className="bg-background  h-screen">

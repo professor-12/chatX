@@ -82,12 +82,10 @@ export const createuser = async (prevstate: User, data: FormData) => {
         });
         const { password: _, ...safeUser } = user;
 
-        const token = generateToken({ userId: user.id }, { expiresIn: "7d" });
         const session = await prisma.session.create({
             data: {
                 userId: user.id,
                 expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-                token,
             },
         });
         const sessiontoken = generateToken(
@@ -101,7 +99,7 @@ export const createuser = async (prevstate: User, data: FormData) => {
             sameSite: "strict",
         });
     } catch (err: any) {
-        return { error: err.message, data: null };
+        return { error: "Error signing in ", data: null };
     }
     redirect("/");
 };
@@ -178,15 +176,11 @@ export const checkAuth = async (): Promise<{
             return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
         }
         const session = await prisma.session.findUnique({
-            where: { id: sessionId },
+            where: { id: sessionId, createdAt: { lt: new Date(Date.now()) } },
         });
 
         if (!session) {
             return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
-        }
-        // Check session  has expired
-        if (new Date(session.expiresAt).getTime() < Date.now()) {
-            return { error: "Session expired", data: null };
         }
         return { error: null, data: session.userId };
     } catch (err: any) {

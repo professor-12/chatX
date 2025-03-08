@@ -12,7 +12,7 @@ const Layout: FC<{ children: ReactNode }> = async (props) => {
                               <SideNav />
                         </div>
                         {/* Users */}
-                        <div className='h-full w-[24%] bg-card border-r'>
+                        <div className='h-full min-w-[20rem] w-[24%] bg-card border-r'>
                               <TabContainer />
                         </div>
                         <div className='h-full flex-[3] bg-card border-r'>
