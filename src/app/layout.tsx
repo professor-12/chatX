@@ -32,6 +32,7 @@ export default function RootLayout({
         <QueryProvider>
           {children}
         </QueryProvider>
+        <div id="portal"></div>
       </body>
     </html>
   );

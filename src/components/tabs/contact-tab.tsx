@@ -1,7 +1,13 @@
-import { allUser, createMessage } from '@/lib/_server/api'
-import { useQuery } from '@tanstack/react-query'
-import React from 'react'
+"use client"
+import { addToContact, allUser, checkcontact, createMessage } from '@/lib/_server/api'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import React, { Fragment, useEffect, useState } from 'react'
 import { ChatCard } from './chat'
+import BackDrop from '../ui/back-drop'
+import prisma from '@/lib/prisma'
+import { PrismaClient } from '@prisma/client'
+import Image from 'next/image'
+import { Button } from '../ui/button'
 
 
 const ContactTab = () => {
@@ -62,21 +68,63 @@ export default ContactTab
 
 
 export const ContactCard = ({ contact }: { contact: any }) => {
-      console.log(contact)
-      return <div className='hover:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-200 scale-[0.9999]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
-            <div className=''>
-                  <div className='flex  items-center gap-3'>
-                        <img
-                              src={contact?.profile?.profilePics}
-                              alt='avatar'
-                              className='w-14 ring-[1px] border border-border h-14 rounded-full'
-                        />
-                        <div className='truncate'>
-                              <p className='truncate text-base'>{contact?.name}</p>
-                              <p className='font-normal text-gray-300/40 text-sm truncate'>{contact?.profile?.bio || "A bio"}</p>
+      const [openModal, setOpenModal] = useState(false)
+      return <Fragment>
+            <div onClick={(e) => { setOpenModal(true); }} className='hover:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-200 scale-[0.9999]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
+                  <div className=''>
+                        <div className='flex  items-center gap-3'>
+                              <img
+                                    src={contact?.profile?.profilePics}
+                                    alt='avatar'
+                                    className='w-14 ring-[1px] border border-border h-14 rounded-full'
+                              />
+                              <div className='truncate'>
+                                    <p className='truncate text-base'>{contact?.name}</p>
+                                    <p className='font-normal text-gray-300/40 text-sm truncate'>{contact?.profile?.bio || "A bio"}</p>
+                              </div>
                         </div>
                   </div>
             </div>
-      </div>
+            {openModal &&
+                  <AddContactModal contact={contact} handleCloseModal={() => {
+                        setOpenModal(false);
+                  }
+                  }
+                  ></AddContactModal>
+            }
+      </Fragment>
 }
 
+
+
+export const AddContactModal = ({ handleCloseModal, contact }: { handleCloseModal: () => void, contact: any }) => {
+      const { data, error, isPending } = useQuery({ queryKey: ["check-contact", contact?.id], queryFn: () => checkcontact(contact?.id) })
+      const { isPending: mutating, error: _error, mutate } = useMutation({ mutationFn: async () => { await addToContact(contact?.id); handleCloseModal() }, mutationKey: ["create-contact", contact?.id] })
+
+      return <BackDrop className='cursor-pointer' onClick={handleCloseModal}>
+            <div onClick={(e) => e.stopPropagation()} className='rounded-xl items-center shadow flex gap-4 flex-col cursor-default py-4 px-6 w-[12rem]  border-border border'>
+                  {
+                        isPending ?
+                              "loading"
+                              : <>
+                                    <img
+                                          src={contact?.profile?.profilePics}
+                                          alt='avatar'
+                                          className='w-14 ring-[1px] border border-border h-14 rounded-full'
+                                    />
+                                    <p className="w-full truncate text-center">
+                                          {contact?.name}
+                                    </p>
+                                    {
+                                          data ?
+                                                <p className='text-green-600/70 text-sm text-nowrap'>Already your contact</p>
+                                                :
+                                                <Button variant="outline" className='p-1 px-2' size="sm" onClick={() => { mutate() }}>{mutating ? "Please wait" : "Add to contact"}</Button>
+                                    }
+                              </>
+                  }
+
+                  {/* {isLoading ? "Loading" : "Loaded"} */}
+            </div>
+      </BackDrop>
+}

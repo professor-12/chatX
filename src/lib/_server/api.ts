@@ -167,8 +167,27 @@ export const addToContact = async (id: string) => {
                 userId: data as string,
             },
         });
+        console.log(usercontact);
         return { data: "Message created successfully", error: null };
     } catch (err) {
         return { error: "An error occured", data: null };
     }
 };
+
+export async function checkcontact(id: string) {
+    const { data, error } = await checkAuth();
+    if (error) {
+        return { error };
+    }
+    try {
+        const isContact = await prisma.contact.findFirst({
+            where: {
+                userId: data as string,
+                contactId: id,
+            },
+        });
+        return !!isContact;
+    } catch (err) {
+        return { error: "An error occured", data: null };
+    }
+}
