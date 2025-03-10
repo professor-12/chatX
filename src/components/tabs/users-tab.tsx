@@ -1,18 +1,18 @@
 "use client"
-import { addToContact, checkcontact, getContact } from '@/lib/_server/api'
+import { addToContact, allUser, checkcontact } from '@/lib/_server/api'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import React, { Fragment, useEffect, useState } from 'react'
 import BackDrop from '../ui/back-drop'
 import { Button } from '../ui/button'
 
-
-const ContactTab = () => {
+const UsersTab = () => {
       const { data, isPending } = useQuery({
-            queryKey: ["get-user"],
-            queryFn: getContact
+            queryKey: ["get-users"],
+            queryFn: allUser
       })
       return (
             <div className='h-screen flex flex-col'>
+                  {/* <div>Add to Contacts</div> */}
                   <div className='px-6'><input type="text" className='bg-card outline-none focus:outline-none border border-border w-full p-1 px-3' placeholder='Search..' /></div>
                   <div className='space-y-2 flex-1  scroll-hidden py-12 pt-6  overflow-y-auto'>
                         {
@@ -44,9 +44,9 @@ const ContactTab = () => {
                                     <div className=''>
                                           {
                                                 data?.data?.length == 0 ? "No Contacts found" :
-                                                      data?.data?.map(({ contact }, index) => {
-                                                            return <ContactCard
-                                                                  key={index} contact={contact} />
+                                                      data?.data?.map((_data, index) => {
+                                                            return <UserCard
+                                                                  key={index} contact={_data} />
                                                       })
                                           }
                                     </div>
@@ -58,11 +58,14 @@ const ContactTab = () => {
       )
 }
 
-export default ContactTab
+export default UsersTab
 
-export const ContactCard = ({ contact }: { contact: any }) => {
+
+
+export const UserCard = ({ contact }: { contact: any }) => {
+      const [openModal, setOpenModal] = useState(false)
       return <Fragment>
-            <div className='hover:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-200 scale-[0.9999]  py-[0.75rem] px-2 border-border  rounded-xl'>
+            <div onClick={(e) => { setOpenModal(true); }} className='hover:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-200 scale-[0.9999]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
                   <div className=''>
                         <div className='flex  items-center gap-3'>
                               <img
@@ -70,15 +73,53 @@ export const ContactCard = ({ contact }: { contact: any }) => {
                                     alt='avatar'
                                     className='w-14 ring-[1px] border border-border h-14 rounded-full'
                               />
-                              <div className='truncate flex-1'>
+                              <div className='truncate'>
                                     <p className='truncate text-base'>{contact?.name}</p>
-                                    <div className='flex items-center mr-3 justify-between flex-1'>
-                                          <p className='font-normal text-gray-300/40 text-sm truncate'>{contact?.profile?.bio || "A bio"}</p>
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" className="lucide  text-accent-foreground cursor-pointer lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
-                                    </div>
+                                    <p className='font-normal text-gray-300/40 text-sm truncate'>{contact?.profile?.bio || "A bio"}</p>
                               </div>
                         </div>
                   </div>
             </div>
+            {openModal &&
+                  <AddContactModal contact={contact} handleCloseModal={() => {
+                        setOpenModal(false);
+                  }
+                  }></AddContactModal>
+            }
       </Fragment>
+}
+
+
+
+
+export const AddContactModal = ({ handleCloseModal, contact }: { handleCloseModal: () => void, contact: any }) => {
+      const { data, error, isPending } = useQuery({ queryKey: ["check-contact", contact?.id], queryFn: () => checkcontact(contact?.id) })
+      const { isPending: mutating, error: _error, mutate } = useMutation({ mutationFn: async () => { await addToContact(contact?.id); handleCloseModal() }, mutationKey: ["create-contact", contact?.id] })
+
+      return <BackDrop className='cursor-pointer' onClick={handleCloseModal}>
+            <div onClick={(e) => e.stopPropagation()} className='rounded-xl items-center shadow flex gap-4 flex-col cursor-default py-4 px-6 w-[12rem]  border-border border'>
+                  {
+                        isPending ?
+                              "loading"
+                              : <>
+                                    <img
+                                          src={contact?.profile?.profilePics}
+                                          alt='avatar'
+                                          className='w-14 ring-[1px] border border-border h-14 rounded-full'
+                                    />
+                                    <p className="w-full truncate text-center">
+                                          {contact?.name}
+                                    </p>
+                                    {
+                                          data ?
+                                                <p className='text-green-600/70 text-sm text-nowrap'>Already your contact</p>
+                                                :
+                                                <Button variant="outline" className='p-1 px-2' size="sm" onClick={() => { mutate() }}>{mutating ? "Please wait" : "Add to contact"}</Button>
+                                    }
+                              </>
+                  }
+
+                  {/* {isLoading ? "Loading" : "Loaded"} */}
+            </div>
+      </BackDrop>
 }

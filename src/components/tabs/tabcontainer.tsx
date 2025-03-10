@@ -6,11 +6,11 @@ import { usePathname } from 'next/navigation'
 import ContactTab from './contact-tab'
 import ProfileTab from './profile-tab'
 import SettingsTab from './settings-tab'
+import UsersTab from './users-tab'
 
 
 const TabContainer = () => {
       const path = usePathname().split("/")[2] || "home"
-      console.log(path)
       return (
             <div className='p-6 h-screen overflow-hidden'>
                   {
@@ -24,6 +24,9 @@ const TabContainer = () => {
                   }
                   {
                         path == "settings" && <SettingsTab />
+                  }
+                  {
+                        path == "users" && <UsersTab />
                   }
             </div>
       )

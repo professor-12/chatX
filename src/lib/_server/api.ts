@@ -18,6 +18,7 @@ export const getContact = async () => {
     try {
         const userContacts = await prisma.contact.findMany({
             where: { userId: data },
+            include: { contact: { include: { profile: true } } },
         });
         return { data: userContacts, error: null };
     } catch (error) {
@@ -71,7 +72,7 @@ export const getContacts = async () => {
         return { error: "not authorized", data: null };
     }
     if (!data) {
-        return { error: "not authorized", data: null };
+        return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
     }
     try {
         const contacts = await prisma.contact.findMany({
@@ -107,7 +108,6 @@ export const createMessage = async (): Promise<{
         });
         return { error: null, data: message };
     } catch (Er) {
-        console.error(Er);
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
 };
@@ -117,7 +117,6 @@ export const getChats = async () => {
     if (!data) {
         return { error };
     }
-
     try {
         const recentChats = await prisma.message.findMany({
             distinct: ["senderId", "receiverId"],
@@ -191,3 +190,22 @@ export async function checkcontact(id: string) {
         return { error: "An error occured", data: null };
     }
 }
+
+export const getMessages = async (id: string) => {
+    const { data, error } = await checkAuth();
+    if (error) return { error };
+
+    try {
+        const messages = await prisma.message.findMany({
+            where: {
+                OR: [
+                    { receiverId: id, senderId: data as string },
+                    { senderId: id, receiverId: data as string },
+                ],
+            },
+        });
+        return { data, error: null };
+    } catch (err) {
+        return { error: "An error occured", data: null };
+    }
+};
