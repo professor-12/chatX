@@ -3,10 +3,6 @@ import { checkAuth } from "./auth";
 import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
 
-export const getUser = async () => {
-    console.log(await checkAuth());
-};
-
 export const getContact = async () => {
     const { data, error } = await checkAuth();
     if (error) {
@@ -204,8 +200,60 @@ export const getMessages = async (id: string) => {
                 ],
             },
         });
-        return { data, error: null };
+        return { data: messages, error: null };
     } catch (err) {
         return { error: "An error occured", data: null };
+    }
+};
+
+export const getUserProfile = async (id: string) => {
+    const { data, error } = await checkAuth();
+    if (error) return { error };
+
+    try {
+        const profile = await prisma.profile.findFirst({
+            where: {
+                userId: id,
+            },
+            include: {
+                user: { omit: { password: true, id: true, email: true } },
+            },
+        });
+        return {
+            error: null,
+            data: {
+                name: profile?.user.name as string,
+                profilePics: profile?.profilePics,
+            },
+        };
+    } catch (err) {
+        return { data: null, error: "An error occured" };
+    }
+};
+
+export const sendMessage = async ({
+    receiverId,
+    message,
+    file,
+}: {
+    receiverId: string;
+    message?: string;
+    file?: string;
+}) => {
+    const { data, error } = await checkAuth();
+    if (error) return { error };
+    if (!message && !file) return;
+    try {
+        const _message = await prisma.message.create({
+            data: {
+                receiverId,
+                senderId: data as string,
+                message,
+                picture: file,
+            },
+        });
+        return { data: _message, error: null };
+    } catch (err) {
+        return { data: null, error: "An error occured" };
     }
 };

@@ -72,8 +72,8 @@ enum  Gender {
 
 model Message {
   id String @map("_id") @id @default(cuid())
-  senderId String @unique
-  receiverId String @unique
+  senderId String
+  receiverId String
   picture String?
   message String?
   createdAt DateTime @default(now())

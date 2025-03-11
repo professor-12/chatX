@@ -1,5 +1,6 @@
 "use client"
-import { getChats, getContact, getUser } from '@/lib/_server/api'
+import { useChatContext } from '@/context/ChatContext'
+import { getChats } from '@/lib/_server/api'
 import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -59,11 +60,12 @@ const Chat = () => {
 export default Chat
 
 export const ChatCard = ({ contact }: { contact: any }) => {
-      return <div className='hover:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-200 scale-[98%]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
+      const { selectedChat, setSelectedChat } = useChatContext()
+      return <div onClick={() => { setSelectedChat(contact?.id as string) }} className='hover:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-200 scale-[98%]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
             <div className='flex items-center justify-between'>
                   <div className='flex  items-center gap-1'>
                         <img
-                              src={"/file.svg"}
+                              src={contact?.avatar}
                               alt='avatar'
                               className='w-14 border border-border h-14 rounded-full'
                         />
