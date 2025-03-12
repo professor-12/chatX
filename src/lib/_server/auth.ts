@@ -88,7 +88,7 @@ export const createuser = async (prevstate: User, data: FormData) => {
                 expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             },
         });
-        const sessiontoken = generateToken(
+        const sessiontoken = await generateToken(
             { sessionId: session.id },
             { expiresIn: "7d" }
         );
@@ -144,7 +144,7 @@ export const loginuser = async (prevstate: User, data: FormData) => {
                 expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             },
         });
-        const token = generateToken(
+        const token = await generateToken(
             { sessionId: session.id },
             { expiresIn: "7d" }
         );
@@ -169,7 +169,7 @@ export const checkAuth = async (): Promise<{
             return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
         }
 
-        const { sessionId } = verifyToken(token.value as string) as {
+        const { sessionId } = (await verifyToken(token.value as string)) as {
             sessionId: string;
         };
         if (!sessionId) {

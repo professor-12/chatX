@@ -4,7 +4,9 @@
     "private": true,
     "scripts": {
         "dev": "next dev",
+        "dev:socket": "node server.js",
         "build": "next build",
+        "build:socker": "NODE_ENV=production ts-node server.js",
         "start": "next start",
         "lint": "next lint"
     },

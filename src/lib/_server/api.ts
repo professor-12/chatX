@@ -119,6 +119,16 @@ export const getChats = async () => {
             orderBy: {
                 createdAt: "desc",
             },
+            where: {
+                OR: [
+                    {
+                        receiverId: data as string,
+                    },
+                    {
+                        senderId: data as string,
+                    },
+                ],
+            },
             include: {
                 sender: {
                     omit: { password: true },
@@ -131,18 +141,31 @@ export const getChats = async () => {
             },
         });
 
-        const __ = recentChats.map((chat) => {
+        const seen = new Set();
+        const removeDuplicate = recentChats.filter(
+            ({ senderId, receiverId }) => {
+                const pairKey = [senderId, receiverId].sort().join("-");
+                if (seen.has(pairKey)) return false;
+                seen.add(pairKey);
+                return true;
+            }
+        );
+        console.table(removeDuplicate);
+
+        const __ = removeDuplicate.map((chat, index) => {
             const isSender = (chat.senderId as string) === (data as string);
             const contact = isSender ? chat.receiver : chat.sender;
 
+            // console.table(__);
             return {
-                id: contact?.id || "group", // Use group ID if needed
-                name: contact?.name || "Unknown", // Fallback in case of no user
-                avatar: contact?.profile?.profilePics || "/default-avatar.png", // Default avatar
+                id: contact?.id || "group",
+                name: contact?.name || "Unknown",
+                avatar: contact?.profile?.profilePics || "/default-avatar.png",
                 lastMessage: chat?.message || "Sent an image",
                 time: chat.createdAt,
             };
         });
+
         return { data: __ };
     } catch (err) {
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
@@ -206,14 +229,36 @@ export const getMessages = async (id: string) => {
     }
 };
 
-export const getUserProfile = async (id: string) => {
+export const getContactPRofile = async (id: string) => {
+    try {
+        const profile = await prisma.profile.findFirst({
+            where: {
+                userId: id,
+            },
+            include: {
+                user: { omit: { password: true, id: true, email: true } },
+            },
+        });
+        return {
+            error: null,
+            data: {
+                name: profile?.user.name as string,
+                profilePics: profile?.profilePics,
+            },
+        };
+    } catch (err) {
+        return { data: null, error: "An error occured" };
+    }
+};
+
+export const getUserProfile = async () => {
     const { data, error } = await checkAuth();
     if (error) return { error };
 
     try {
         const profile = await prisma.profile.findFirst({
             where: {
-                userId: id,
+                userId: data as string,
             },
             include: {
                 user: { omit: { password: true, id: true, email: true } },

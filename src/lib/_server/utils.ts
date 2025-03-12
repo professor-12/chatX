@@ -1,11 +1,12 @@
+"use server";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-export function generateToken(payload: any, options: jwt.SignOptions) {
+export async function generateToken(payload: any, options: jwt.SignOptions) {
     return jwt.sign(payload, process.env.JWT_SECRET as string, options);
 }
 
-export function verifyToken(token: string) {
+export async function verifyToken(token: string) {
     return jwt.verify(token, process.env.JWT_SECRET as string);
 }
 

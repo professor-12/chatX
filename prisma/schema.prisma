@@ -90,3 +90,5 @@ model Contact {
   contact User @relation(fields: [contactId], references: [id], name: "contactRelation")
   user User @relation(fields: [userId], references: [id], name: "userRelation")
 }
+
+

@@ -4,10 +4,10 @@ import ChatSection from './chat-section'
 
 const ChatPage = () => {
       return (
-            <main className='h-screen bg-popover pb-12 flex flex-col relative'>
+            <main className='h-screen flex  justify-between flex-col pb-12'>
                   <ChatHeader />
                   <ChatSection />
-            </main>
+            </main >
       )
 }
 

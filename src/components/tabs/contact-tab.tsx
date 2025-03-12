@@ -64,7 +64,7 @@ export default ContactTab
 
 export const ContactCard = ({ contact }: { contact: any }) => {
       const { replace } = useRouter()
-      const { selectedChat, setSelectedChat } = useChatContext()
+      const { setSelectedChat } = useChatContext()
       return <Fragment>
             <div className='hover:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-200 scale-[0.9999]  py-[0.75rem] px-2 border-border  rounded-xl'>
                   <div className=''>

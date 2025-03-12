@@ -1,5 +1,6 @@
 "use client"
 import { getMessages } from '@/lib/_server/api'
+import { checkAuth } from '@/lib/_server/auth'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 interface IContext {
@@ -9,6 +10,8 @@ interface IContext {
       chats: Array<any>
       setChats: React.Dispatch<React.SetStateAction<never[]>>
       fetchingChat: boolean
+      userId: string | null
+      setUserId: React.Dispatch<React.SetStateAction<null | string>>
 
 }
 
@@ -17,6 +20,7 @@ const Context = createContext<IContext>({} as any)
 const ChatContext = ({ children }: { children: React.ReactNode }) => {
       const [selectedChat, setSelectedChat] = useState<null | string>(null)
       const [chats, setChats] = useState([])
+      const [userId, setUserId] = useState<null | string>(null)
       const [fetchingChat, setFetchingChat] = useState(true)
 
       const fetchChat = async () => {
@@ -29,8 +33,15 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
       useEffect(() => {
             fetchChat()
       }, [selectedChat])
+      useEffect(() => {
+            const getUserId = async () => {
+                  const { data } = await checkAuth()
+                  setUserId(data as string)
+            }
+            getUserId()
+      }, [])
       return (
-            <Context.Provider value={{ selectedChat, setSelectedChat, fetchChat, chats, setChats, fetchingChat }}>{children}</Context.Provider>
+            <Context.Provider value={{ selectedChat, setSelectedChat, fetchChat, chats, setChats, fetchingChat, setUserId, userId }}>{children}</Context.Provider>
       )
 }
 
