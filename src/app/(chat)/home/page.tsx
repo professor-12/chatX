@@ -5,7 +5,7 @@ import React from 'react'
 
 const HomePage = () => {
       const { selectedChat, chats } = useChatContext()
-      console.log(chats)
+      
       return (
             !!!selectedChat ?
                   <div className='w-full h-full  flex-col flex items-center justify-center'>

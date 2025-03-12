@@ -150,7 +150,7 @@ export const getChats = async () => {
                 return true;
             }
         );
-        console.table(removeDuplicate);
+        // console.table(removeDuplicate);
 
         const __ = removeDuplicate.map((chat, index) => {
             const isSender = (chat.senderId as string) === (data as string);

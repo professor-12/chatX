@@ -26,8 +26,8 @@ const TabComponent: FC<{ children: ReactNode }> = ({ children }) => {
       }, [])
       useEffect(() => {
             const activeTab = localStorage.getItem("tab") || "home"
-            setActiveTab(activeTab)
-            // changeActiveTab(pathnames[2])
+            // setActiveTab(activeTab)
+            changeActiveTab(pathnames[2])
       }, [pathnames])
       return (
             <TabContext.Provider value={{ activeTab, changeActiveTab }}>{children}</TabContext.Provider>
