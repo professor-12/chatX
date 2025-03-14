@@ -1,5 +1,4 @@
 "use client";
-import { useChatContext } from "@/context/ChatContext";
 import { useUserContext } from "@/context/user-context";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io";
@@ -11,7 +10,6 @@ const useSocket = () => {
 
     useEffect(() => {
         const socket = io();
-        console.log(socket, "use socket");
         setSocket(socket as any);
         if (userId) {
             socket.emit("joined", userId);

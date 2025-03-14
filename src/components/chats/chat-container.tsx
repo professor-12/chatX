@@ -1,8 +1,9 @@
 "use client"
-import { useChatContext } from "@/context/ChatContext"
+import { useUserContext } from "@/context/user-context"
 import { RefObject, useEffect, useRef } from "react"
 
 const ChatContainer = ({ chats }: { chats: Array<any> }) => {
+      const { userId } = useUserContext()
       const ref = useRef(undefined) as unknown as RefObject<HTMLDivElement>
       useEffect(() => {
             ref.current?.scrollIntoView({ behavior: "smooth" })
@@ -12,7 +13,7 @@ const ChatContainer = ({ chats }: { chats: Array<any> }) => {
                   <div className="mt-auto">
                         {
                               chats.map((chat, key) => {
-                                    return <ChatCard chat={chat} key={key + chat?.id} />
+                                    return <ChatCard userId={userId} chat={chat} key={key + chat?.id} />
                               })
                         }
                         <div ref={ref} id="" aria-hidden></div>
@@ -25,9 +26,9 @@ export default ChatContainer
 
 
 
-const ChatCard = ({ chat }: { chat: any }) => {
-      const { userId } = useChatContext()
-      const isRight = (userId == chat?.senderId) || !chat?.senderId
+const ChatCard = ({ chat, userId }: { chat: any, userId: string | null }) => {
+      const isRight = (userId == (chat?.senderId) || !chat?.senderId)
+      console.log(userId, chat.senderId)
       return <div className={`py-1 w-full  flex ${isRight && "justify-end"}`}>
             <div className="text-right">
                   <div>

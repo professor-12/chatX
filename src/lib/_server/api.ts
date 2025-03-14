@@ -185,7 +185,6 @@ export const addToContact = async (id: string) => {
                 userId: data as string,
             },
         });
-        console.log(usercontact);
         return { data: "Message created successfully", error: null };
     } catch (err) {
         return { error: "An error occured", data: null };

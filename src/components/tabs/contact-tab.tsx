@@ -63,22 +63,24 @@ const ContactTab = () => {
 export default ContactTab
 
 export const ContactCard = ({ contact }: { contact: any }) => {
-      const { replace } = useRouter()
       const { setSelectedChat } = useChatContext()
       return <Fragment>
             <div className='hover:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-200 scale-[0.9999]  py-[0.75rem] px-2 border-border  rounded-xl'>
                   <div className=''>
-                        <div className='flex group items-center gap-3'>
-                              <img
-                                    src={contact?.profile?.profilePics}
-                                    alt='avatar'
-                                    className='w-14 ring-[1px] border border-border h-14 rounded-full'
-                              />
+                        <div className='flex group h-14 w-14 overflow-hidden rounded-full bg-accent items-center gap-3'>
+                              {
+                                    contact?.profile?.profilePics &&
+                                    <img
+                                          src={contact?.profile?.profilePics}
+                                          alt='avatar'
+                                          className='w-14  border border-border h-14 rounded-full'
+                                    />
+                              }
                               <div className='truncate flex-1'>
                                     <p className='truncate text-base'>{contact?.name}</p>
                                     <div className='flex items-center mr-3 justify-between flex-1'>
                                           <p className='font-normal text-gray-300/40 text-sm truncate'>{contact?.profile?.bio || "A bio"}</p>
-                                          <svg onClick={() => { setSelectedChat(contact.id); replace("/home") }} xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide  text-accent-foreground hidden group-hover:inline-flex cursor-pointer lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
+                                          <svg onClick={() => { setSelectedChat(contact.id) }} xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide  text-accent-foreground hidden group-hover:inline-flex cursor-pointer lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
                                     </div>
                               </div>
                         </div>

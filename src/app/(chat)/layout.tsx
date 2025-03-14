@@ -5,6 +5,7 @@ import ChatContext from '@/context/ChatContext'
 import SocketContext from '@/context/socket-context'
 
 import TabComponent from '@/context/TabContext'
+import UserContext from '@/context/user-context'
 import { checkAuth } from '@/lib/_server/auth'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -16,25 +17,27 @@ const Layout: FC<{ children: ReactNode }> = async (props) => {
             return redirect("/login")
       }
       return (
-            <SocketContext>
-                  <ChatContext>
-                        <TabComponent>
-                              <div className='w-full flex h-screen  overflow-hidden relative'>
-                                    {/* Side nav */}
-                                    <div className='h-full w-[80px]   bg-accent dark:bg-accent/45 border-r'>
-                                          <SideNav />
+            <UserContext>
+                  <SocketContext>
+                        <ChatContext>
+                              <TabComponent>
+                                    <div className='w-full flex h-screen  overflow-hidden relative'>
+                                          {/* Side nav */}
+                                          <div className='h-full w-[80px]   bg-accent dark:bg-accent/45 border-r'>
+                                                <SideNav />
+                                          </div>
+                                          {/* Users */}
+                                          <div className='h-full min-w-[20rem] w-[24%] bg-card border-r'>
+                                                <TabContainer />
+                                          </div>
+                                          <div className='h-full flex-[3] bg-card border-r'>
+                                                {props.children}
+                                          </div>
                                     </div>
-                                    {/* Users */}
-                                    <div className='h-full min-w-[20rem] w-[24%] bg-card border-r'>
-                                          <TabContainer />
-                                    </div>
-                                    <div className='h-full flex-[3] bg-card border-r'>
-                                          {props.children}
-                                    </div>
-                              </div>
-                        </TabComponent>
-                  </ChatContext>
-            </SocketContext>
+                              </TabComponent>
+                        </ChatContext>
+                  </SocketContext>
+            </UserContext>
 
       )
 }

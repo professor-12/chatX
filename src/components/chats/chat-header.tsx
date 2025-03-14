@@ -16,7 +16,10 @@ const ChatHeader = () => {
 
                   <div className='flex gap-4 items-center'>
                         <div className='h-10 aspect-square rounded-full overflow-hidden bg-card border-border border'>
-                              <img src={data?.data?.profilePics as string} alt="" />
+                              {
+                                    !!(data?.data?.profilePics) &&
+                                    <img src={data?.data?.profilePics as string} alt="" />
+                              }
                         </div>
                         <p className='text-xl font-medium'>{data?.data?.name}</p>
                   </div>

@@ -13,7 +13,7 @@ const links = [
 ]
 
 const SideNav = () => {
-      const { activeTab } = useTabContext()
+      const { activeTab, changeActiveTab } = useTabContext()
       return (
             <aside className="w-full text-white/60 px-3 flex flex-col h-screen    py-6">
                   <div className='flex justify-center'>
@@ -24,14 +24,15 @@ const SideNav = () => {
                         <ul className='mt-5 gap-1 flex-col items-center flex'>
                               {
                                     new Array(4).fill(null).map((_, index) => {
-                                          const isActive = (links[index].href.split("/")[2] || "home") === (activeTab || "home");
+                                          const link = links[index].href.split("/")[2] || "home"
+                                          const isActive = (link) === (activeTab || "home");
                                           return (
-                                                <Link href={links[index].href} key={index} className='relative group'>
+                                                <div onClick={() => { changeActiveTab(link) }} key={index} className='relative group'>
                                                       <li key={index} className={`!text-white/60 ${isActive && "bg-primary/10"} duration-100 transition-all  p-3 hover:bg-primary/20  cursor-pointer rounded-xl`}>
                                                             {Svgs[index]}
                                                       </li>
                                                       <div className='absolute left-16 top-1 duration-200 transition-all hidden group-hover:inline rounded-lg p-2 min-w-[12px] dark:bg-white bg-slate-800 text-slate-200 text-sm dark:text-black font-medium z-[12] capitalize'>{links[index].href.split("/")[2] ?? "Home"}</div>
-                                                </Link>
+                                                </div>
                                           )
                                     })
                               }

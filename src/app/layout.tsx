@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/QueryProvider";
-import SocketContext from "@/context/socket-context";
-import ChatContext from "@/context/ChatContext";
-import UserContext from "@/context/user-context";
 
 
 const geistSans = Geist({
@@ -31,13 +28,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} dark antialiased bg-background`}
       >
-
         <QueryProvider>
-          <UserContext>
+          <>
             {children}
-          </UserContext>
+            <div id="portal"></div>
+          </>
         </QueryProvider>
-        <div id="portal"></div>
       </body>
     </html>
   );

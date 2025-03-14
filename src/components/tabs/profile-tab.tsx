@@ -5,6 +5,7 @@ import React from 'react'
 
 const ProfileTab = () => {
       const { data } = useQuery({ queryKey: ["profile"], queryFn: getUserProfile })
+      console.log(data?.data)
 
       return (
             <div>{data?.data?.name}</div>

@@ -1,34 +1,31 @@
 "use client"
-import { usePathname } from 'next/navigation'
 import React, { FC, ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 
 
 interface TabContextProps {
       activeTab: null | string | number;
-      changeActiveTab: (tab: number) => void
+      changeActiveTab: (tab: string | null) => void
 }
 
 
 const TabContext = React.createContext<TabContextProps>({
       activeTab: null,
-      changeActiveTab: (tab: number) => { }
+      changeActiveTab: (tab: string | null) => { }
 })
 
 const TabComponent: FC<{ children: ReactNode }> = ({ children }) => {
-      const pathnames = usePathname().split('/')
-      const [activeTab, setActiveTab] = useState<null | string | number>(pathnames[2])
-
+      const [activeTab, setActiveTab] = useState<null | string | number>("home")
       const changeActiveTab = useCallback((tab: null | string | number) => {
             setActiveTab(tab)
-            if (tab) {
-                  localStorage.setItem("tab", "" + tab)
-            }
+            localStorage.setItem("tab", "" + tab)
+
       }, [])
       useEffect(() => {
-            const activeTab = localStorage.getItem("tab") || "home"
-            // setActiveTab(activeTab)
-            changeActiveTab(pathnames[2])
-      }, [pathnames])
+            const tab = localStorage.getItem("tab")
+            if (!tab) return
+            setActiveTab(tab)
+      }, [])
+
       return (
             <TabContext.Provider value={{ activeTab, changeActiveTab }}>{children}</TabContext.Provider>
       )
