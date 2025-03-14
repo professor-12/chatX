@@ -1,6 +1,6 @@
+"use server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { checkAuth } from "./lib/_server/auth";
 
 const protectedRoutes = ["/home"];
 const authRestrictedRoutes = ["/login", "/signup"];
@@ -10,9 +10,6 @@ export async function middleware(request: NextRequest) {
 
     const token = request.cookies.get("token")?.value;
 
-    if (authRestrictedRoutes.some((route) => path.startsWith(route)) && token) {
-        return NextResponse.redirect(new URL("/home", request.url));
-    }
     if (protectedRoutes.some((route) => path.startsWith(route)) && !token) {
         return NextResponse.redirect(new URL("/login", request.url));
     }

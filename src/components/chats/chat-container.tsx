@@ -12,12 +12,12 @@ const ChatContainer = ({ chats }: { chats: Array<any> }) => {
                   <div className="mt-auto">
                         {
                               chats.map((chat, key) => {
-                                    return <ChatCard chat={chat} key={key + chat.id} />
+                                    return <ChatCard chat={chat} key={key + chat?.id} />
                               })
                         }
                         <div ref={ref} id="" aria-hidden></div>
                   </div>
-            </section  >
+            </section>
       )
 }
 
@@ -27,8 +27,7 @@ export default ChatContainer
 
 const ChatCard = ({ chat }: { chat: any }) => {
       const { userId } = useChatContext()
-      const isRight = (userId == chat?.senderId) || !!!chat?.senderId
-
+      const isRight = (userId == chat?.senderId) || !chat?.senderId
       return <div className={`py-1 w-full  flex ${isRight && "justify-end"}`}>
             <div className="text-right">
                   <div>

@@ -4,6 +4,7 @@ import "./globals.css";
 import QueryProvider from "@/components/QueryProvider";
 import SocketContext from "@/context/socket-context";
 import ChatContext from "@/context/ChatContext";
+import UserContext from "@/context/user-context";
 
 
 const geistSans = Geist({
@@ -30,13 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} dark antialiased bg-background`}
       >
-        <ChatContext>
-          <SocketContext>
-            <QueryProvider>
-              {children}
-            </QueryProvider>
-          </SocketContext>
-        </ChatContext>
+
+        <QueryProvider>
+          <UserContext>
+            {children}
+          </UserContext>
+        </QueryProvider>
         <div id="portal"></div>
       </body>
     </html>

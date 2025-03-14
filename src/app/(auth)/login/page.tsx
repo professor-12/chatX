@@ -21,7 +21,6 @@ const initialData = {
 };
 
 const LoginPage = () => {
-      const router = useRouter()
       const [state, action, isPending] = useActionState<typeof initialData>(
             loginuser as any,
             initialData

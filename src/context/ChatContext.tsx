@@ -1,7 +1,9 @@
 "use client"
+import useSocket from '@/hooks/useSocket'
 import { getMessages } from '@/lib/_server/api'
 import { checkAuth } from '@/lib/_server/auth'
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import { useUserContext } from './user-context'
 
 interface IContext {
       selectedChat: null | string
@@ -11,16 +13,16 @@ interface IContext {
       setChats: React.Dispatch<React.SetStateAction<never[]>>
       fetchingChat: boolean
       userId: string | null
-      setUserId: React.Dispatch<React.SetStateAction<null | string>>
 
 }
 
 
 const Context = createContext<IContext>({} as any)
 const ChatContext = ({ children }: { children: React.ReactNode }) => {
+      const { socket } = useSocket()
       const [selectedChat, setSelectedChat] = useState<null | string>(null)
-      const [chats, setChats] = useState([])
-      const [userId, setUserId] = useState<null | string>(null)
+      const [chats, setChats] = useState([]) as any
+      const { userId } = useUserContext()
       const [fetchingChat, setFetchingChat] = useState(true)
 
       const fetchChat = async () => {
@@ -34,14 +36,24 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
             fetchChat()
       }, [selectedChat])
       useEffect(() => {
-            const getUserId = async () => {
-                  const { data } = await checkAuth()
-                  setUserId(data as string)
+            socket?.on("get-message", ({ senderId, message }) => {
+                  if (senderId !== selectedChat) return
+                  setChats((prev: any) => {
+                        return [...prev, message]
+                  })
+            })
+            return () => {
+                  socket?.off("get-message", ({ senderId, message }) => {
+                        if (senderId !== selectedChat) return
+                        setChats((prev: any) => {
+                              return [...prev, message]
+                        })
+                  })
             }
-            getUserId()
-      }, [])
+      }, [socket, selectedChat])
+
       return (
-            <Context.Provider value={{ selectedChat, setSelectedChat, fetchChat, chats, setChats, fetchingChat, setUserId, userId }}>{children}</Context.Provider>
+            <Context.Provider value={{ selectedChat, setSelectedChat, fetchChat, chats, setChats, fetchingChat, userId }}>{children}</Context.Provider>
       )
 }
 

@@ -184,7 +184,6 @@ export const checkAuth = async (): Promise<{
         }
         return { error: null, data: session.userId };
     } catch (err: any) {
-        console.error("Auth error:", err.message);
         return { error: "Unauthorized", data: null };
     }
 };

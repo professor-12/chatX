@@ -6,10 +6,10 @@ const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
 const port = 3000;
 
-const connectedUsers = new Map();
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
+const connectedUsers = new Map();
 app.prepare().then(() => {
     const httpServer = createServer(handler) as any;
     const io = new Server(httpServer);
@@ -18,17 +18,28 @@ app.prepare().then(() => {
         socket.on("joined", (id) => {
             if (connectedUsers.has(id)) return;
             connectedUsers.set(id, socket.id);
+            console.log(connectedUsers);
         });
-        socket.on("send-message", (id, message) => {
-            const socketId = connectedUsers.get(id);
+        socket.on("send-message", ({ senderId, receiverId, message }) => {
+            const socketId = connectedUsers.get(receiverId);
+            console.log({ senderId, receiverId, message });
             if (!socketId) return;
-            socket.to(socketId).emit("receieve-message", message);
+            io.to(socketId).emit("get-message", { senderId, message });
+        });
+
+        socket.on("disconnect", () => {
+            for (let [userId, socketID] of connectedUsers.entries()) {
+                if (socket.id == socketID) {
+                    connectedUsers.delete(userId);
+                    console.log(userId, "This user disconnected");
+                    break;
+                }
+            }
         });
     });
 
     httpServer
         .once("error", (err: any) => {
-            console.error(err);
             process.exit(1);
         })
         .listen(port, () => {

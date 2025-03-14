@@ -1,7 +1,5 @@
 "use client"
-import React, { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react'
-import { io } from "socket.io-client";
-import { useChatContext } from './ChatContext';
+import React, { createContext, FC, ReactNode, useContext } from 'react'
 import useSocket from '@/hooks/useSocket';
 
 const Context = createContext({})
@@ -9,10 +7,6 @@ const Context = createContext({})
 
 const SocketContext: FC<{ children: ReactNode }> = ({ children }) => {
       const { socket } = useSocket()
-
-
-    
-
       return (
             <Context.Provider value={{ socket }}>{children}</Context.Provider>
       )
