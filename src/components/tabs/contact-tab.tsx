@@ -67,15 +67,12 @@ export const ContactCard = ({ contact }: { contact: any }) => {
       return <Fragment>
             <div className='hover:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-200 scale-[0.9999]  py-[0.75rem] px-2 border-border  rounded-xl'>
                   <div className=''>
-                        <div className='flex group h-14 w-14 overflow-hidden rounded-full bg-accent items-center gap-3'>
-                              {
-                                    contact?.profile?.profilePics &&
-                                    <img
-                                          src={contact?.profile?.profilePics}
-                                          alt='avatar'
-                                          className='w-14  border border-border h-14 rounded-full'
-                                    />
-                              }
+                        <div className='flex group  items-center gap-3'>
+                              <img
+                                    src={contact?.profile?.profilePics}
+                                    // alt='avatar'
+                                    className='w-14  border border-border h-14 rounded-full'
+                              />
                               <div className='truncate flex-1'>
                                     <p className='truncate text-base'>{contact?.name}</p>
                                     <div className='flex items-center mr-3 justify-between flex-1'>

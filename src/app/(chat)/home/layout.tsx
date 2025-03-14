@@ -23,7 +23,7 @@ const Layout: FC<{ children: ReactNode }> = async (props) => {
                               <TabComponent>
                                     <div className='w-full flex h-screen  overflow-hidden relative'>
                                           {/* Side nav */}
-                                          <div className='h-full w-[80px]   bg-accent dark:bg-accent/45 border-r'>
+                                          <div className='md:h-full max-md:fixed bottom-0 w-full md:w-[80px]   bg-accent dark:bg-accent/45 border-r'>
                                                 <SideNav />
                                           </div>
                                           {/* Users */}
