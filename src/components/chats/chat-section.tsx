@@ -1,7 +1,7 @@
 "use client"
 import { useChatContext } from '@/context/ChatContext';
 import { sendMessage } from '@/lib/_server/api';
-import React, { RefObject, useEffect, useId, useRef, useState } from 'react'
+import React, { RefObject, useEffect, useRef, useState } from 'react'
 import ChatContainer from './chat-container';
 import useSocket from '@/hooks/useSocket';
 import { useUserContext } from '@/context/user-context';
@@ -9,7 +9,7 @@ import { useUserContext } from '@/context/user-context';
 const ChatSection = () => {
       const { userId } = useUserContext()
       const { socket } = useSocket()
-      const { selectedChat: id, chats, setChats } = useChatContext()
+      const { selectedChat: id, chats, setChats, lastChatQuery } = useChatContext()
       const [userInput, setUserInput] = useState("")
       const inputref = useRef(undefined) as unknown as RefObject<HTMLInputElement> | undefined
       useEffect(() => {
@@ -34,6 +34,7 @@ const ChatSection = () => {
                   setChats(() => [...temp, (data)?.data] as any)
                   socket?.emit("send-message", { senderId: userId, message: data?.data, receiverId: id })
                   setUserInput("")
+                  lastChatQuery.refetch()
             } catch (err) {
                   return;
             }

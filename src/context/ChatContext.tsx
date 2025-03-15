@@ -1,9 +1,10 @@
 "use client"
 import useSocket from '@/hooks/useSocket'
-import { getMessages } from '@/lib/_server/api'
+import { getChats, getMessages } from '@/lib/_server/api'
 import { checkAuth } from '@/lib/_server/auth'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useUserContext } from './user-context'
+import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
 
 interface IContext {
       selectedChat: null | string
@@ -13,12 +14,30 @@ interface IContext {
       setChats: React.Dispatch<React.SetStateAction<never[]>>
       fetchingChat: boolean
       userId: string | null
+      lastChatQuery: UseQueryResult<{
+            error: string | null;
+            data?: undefined;
+      } | {
+            data: {
+                  id: string;
+                  name: string;
+                  avatar: string;
+                  lastMessage: string;
+                  time: Date;
+            }[];
+            error?: undefined;
+      } | {
+            error: string;
+            data: null;
+      }, Error>
 
 }
-
-
 const Context = createContext<IContext>({} as any)
 const ChatContext = ({ children }: { children: React.ReactNode }) => {
+      const lastChatQuery = useQuery({
+            queryFn: getChats,
+            queryKey: ["get-chat"]
+      })
       const { socket } = useSocket()
       const [selectedChat, setSelectedChat] = useState<null | string>(null)
       const [chats, setChats] = useState([]) as any
@@ -41,6 +60,7 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
                   setChats((prev: any) => {
                         return [...prev, message]
                   })
+                  lastChatQuery.refetch()
             })
             return () => {
                   socket?.off("get-message", ({ senderId, message }) => {
@@ -53,7 +73,7 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
       }, [socket, selectedChat])
 
       return (
-            <Context.Provider value={{ selectedChat, setSelectedChat, fetchChat, chats, setChats, fetchingChat, userId }}>{children}</Context.Provider>
+            <Context.Provider value={{ selectedChat, setSelectedChat, fetchChat, chats, setChats, fetchingChat, userId, lastChatQuery }}>{children}</Context.Provider>
       )
 }
 

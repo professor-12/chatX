@@ -29,8 +29,8 @@ const SignUp = () => {
       return (
             <div className="flex dark:text-white text-black items-center flex-1">
                   <form action={action} className="w-full sm:px-8 max-lg:max-w-[40rem] mx-auto space-y-4">
-                        <h1 className="text-white text-[26px] mb-4 font-medium tracking-wide">
-                              Sign up
+                        <h1 className="dark:text-white text-[26px] mb-4 font-medium tracking-wide">
+                              Sign up to ChatX.
                         </h1>
                         {state.error && typeof state.error === "string" && (
                               <p className="text-sm text-destructive">{state.error}</p>
@@ -113,7 +113,7 @@ const SignUp = () => {
                         </div>
                         <div className="text-[12px] tracking-wide text-center">
                               Already have an account?{" "}
-                              <Link href="/login" className="text-white/50 hover:underline">
+                              <Link href="/login" className="dark:text-white/50 hover:underline">
                                     Login
                               </Link>
                         </div>

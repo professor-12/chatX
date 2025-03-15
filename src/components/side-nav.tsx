@@ -28,10 +28,10 @@ const SideNav = () => {
                                           const isActive = (link) === (activeTab || "home");
                                           return (
                                                 <div onClick={() => { changeActiveTab(link) }} key={index} className='relative group'>
-                                                      <li key={index} className={`!text-white/60 ${isActive && "bg-primary/10"} duration-100 transition-all  p-3 hover:bg-primary/20  cursor-pointer rounded-xl`}>
+                                                      <li key={index} className={`dark:text-white/60 ${isActive && "bg-primary/10"} duration-100 transition-all  p-3 hover:bg-primary/20 text-primary cursor-pointer rounded-xl`}>
                                                             {Svgs[index]}
                                                       </li>
-                                                      <div className='absolute left-16 top-1 duration-200 transition-all hidden group-hover:inline rounded-lg p-2 min-w-[12px] dark:bg-white bg-slate-800 text-slate-200 text-sm dark:text-black font-medium z-[12] capitalize'>{links[index].href.split("/")[2] ?? "Home"}</div>
+                                                      <div className='absolute left-16 top-1 duration-200 transition-all hidden group-hover:inline rounded-lg p-2 min-w-[12px] dark:bg-white bg-card shadow border dark:text-slate-200 text-sm text-black font-medium z-[12] capitalize'>{links[index].href.split("/")[2] ?? "Home"}</div>
                                                 </div>
                                           )
                                     })

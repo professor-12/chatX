@@ -28,9 +28,7 @@ const LoginPage = () => {
       return (
             <div className="flex dark:text-white text-black items-center flex-1">
                   <form action={action} className="w-full sm:px-8 space-y-4">
-                        <h1 className="text-white text-[26px] mb-4 font-medium tracking-wide">
-                              Login
-                        </h1>
+                        <h1 className="text-[1.5rem]">Welcome back to ChatX</h1>
                         {state?.error && typeof state?.error === "string" && (
                               <p className="text-sm text-destructive">{state?.error}</p>
                         )}
@@ -43,6 +41,7 @@ const LoginPage = () => {
                                     className={clsx({ "border-destructive": state?.error?.email })}
                                     name="email"
                                     type="email"
+                                    id='email'
                                     placeholder="example@gmail.com"
                               />
                               {state?.error?.email && (
@@ -59,6 +58,7 @@ const LoginPage = () => {
                                     defaultValue={state?.prevState?.password ?? ""}
                                     className={clsx({ "border-destructive": state?.error?.password })}
                                     name="password"
+                                    id="password"
                                     type="password" // Changed from text to password
                                     placeholder="Your password"
                               />
@@ -103,7 +103,7 @@ const LoginPage = () => {
                         {/* Sign-Up Link */}
                         <div className="text-[12px] tracking-wide text-center">
                               Don{"'"}t have an account?{" "}
-                              <Link href="/signup" className="text-white/50 hover:underline">
+                              <Link href="/signup" className="dark:text-white/50 text-accent-foreground hover:underline">
                                     Sign up
                               </Link>
                         </div>

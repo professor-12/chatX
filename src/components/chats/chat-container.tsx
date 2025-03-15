@@ -26,13 +26,13 @@ export default ChatContainer
 
 
 
+
 const ChatCard = ({ chat, userId }: { chat: any, userId: string | null }) => {
       const isRight = (userId == (chat?.senderId) || !chat?.senderId)
-      console.log(userId, chat.senderId)
       return <div className={`py-1 w-full  flex ${isRight && "justify-end"}`}>
-            <div className="text-right">
+            <div className={isRight ? "text-right" : ""}>
                   <div>
-                        <div className={` text-black max-w-[20rem]  text-wrap leading-6 p-2 px-4 rounded-xl  ${isRight ? 'rounded-br-none bg-white' : "rounded-bl-none bg-accent-foreground/70"}`}>{chat?.message}
+                        <div className={` text-black max-w-[20rem]  text-wrap leading-6 p-2 px-4 rounded-xl  ${isRight ? 'rounded-br-none bg-white' : "rounded-bl-none bg-green-400/90"}`}>{chat?.message}
                         </div>
                         {
                               !!chat?.notsent &&
@@ -43,7 +43,7 @@ const ChatCard = ({ chat, userId }: { chat: any, userId: string | null }) => {
                   </div>
                   {
                         chat?.createdAt &&
-                        <span className='p-px text-sm text-muted-foreground text-pretty'>{new Intl.DateTimeFormat().format(new Date(chat?.createdAt))}</span>
+                        <span className='p-px text-xs text-muted-foreground text-pretty'>{new Intl.DateTimeFormat().format(new Date(chat?.createdAt))}</span>
                   }
             </div>
 

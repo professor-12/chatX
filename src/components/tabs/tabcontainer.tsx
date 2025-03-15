@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import Chat from './chat'
+import Chat from './chat-tab'
 import ContactTab from './contact-tab'
 import ProfileTab from './profile-tab'
 import SettingsTab from './settings-tab'
