@@ -32,7 +32,7 @@ const ChatCard = ({ chat, userId }: { chat: any, userId: string | null }) => {
       return <div className={`py-1 w-full  flex ${isRight && "justify-end"}`}>
             <div className={isRight ? "text-right" : ""}>
                   <div>
-                        <div className={` text-black max-w-[20rem]  text-wrap leading-6 p-2 px-4 rounded-xl  ${isRight ? 'rounded-br-none bg-white' : "rounded-bl-none bg-green-400/90"}`}>{chat?.message}
+                        <div className={` text-black max-w-[20rem]  text-wrap leading-6 p-2 px-4 rounded-xl  ${isRight ? 'rounded-br-none shadow bg-slate-200' : "rounded-bl-none bg-green-400/90"}`}>{chat?.message}
                         </div>
                         {
                               !!chat?.notsent &&

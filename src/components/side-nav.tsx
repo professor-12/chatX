@@ -1,8 +1,8 @@
 "use client";
 "use strict";
 import { useTabContext } from '@/context/TabContext'
-import Link from 'next/link'
 import React, { ReactNode } from 'react'
+import ProfileCard from './ProfileCard';
 
 const links = [
       { href: '/home', label: 'Home' },
@@ -16,9 +16,10 @@ const SideNav = () => {
       const { activeTab, changeActiveTab } = useTabContext()
       return (
             <aside className="w-full text-white/60 px-3 flex flex-col h-screen    py-6">
-                  <div className='flex justify-center'>
+                  <ProfileCard />
+                  {/* <div className='flex justify-center'>
                         <div className='w-[40px]  flex items-center aspect-square rounded-full ring bg-card'></div>
-                  </div>
+                  </div> */}
                   <div className='w-full h-px bg-slate-500/30 mt-4'></div>
                   <div className='flex flex-col flex-1 justify-between'>
                         <ul className='mt-5 gap-1 flex-col items-center flex'>

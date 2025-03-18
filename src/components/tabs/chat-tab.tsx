@@ -59,7 +59,7 @@ export default Chat
 export const ChatCard = ({ contact }: { contact: any }) => {
 
       const { setSelectedChat } = useChatContext()
-      return <div onClick={() => { setSelectedChat(contact?.id as string) }} className='hover:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-200 scale-[98%]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
+      return <div onClick={() => { setSelectedChat(contact?.id as string) }} className='hover:shadow hover:bg-slate-200/80 hover:scale-100 transition-all duration-200 scale-[98%]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
             <div className='flex items-center justify-between'>
                   <div className='flex  items-center gap-1'>
                         <img

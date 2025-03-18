@@ -265,6 +265,7 @@ export const getUserProfile = async () => {
             data: {
                 name: profile?.user.name as string,
                 profilePics: profile?.profilePics,
+                ...profile,
             },
         };
     } catch (err) {
