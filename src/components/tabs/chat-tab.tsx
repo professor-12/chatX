@@ -1,8 +1,6 @@
 "use client"
 import { useChatContext } from '@/context/ChatContext'
 import { useUserContext } from '@/context/user-context'
-import { getChats } from '@/lib/_server/api'
-import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 
 const Chat = () => {

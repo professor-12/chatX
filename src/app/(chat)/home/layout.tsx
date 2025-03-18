@@ -1,3 +1,4 @@
+import MobileNav from '@/components/mobile/SideNav'
 import SideNav from '@/components/side-nav'
 import TabContainer from '@/components/tabs/tabcontainer'
 import { ERROR_CONSTANT } from '@/constants/error'
@@ -23,8 +24,15 @@ const Layout: FC<{ children: ReactNode }> = async (props) => {
                               <TabComponent>
                                     <div className='w-full flex h-screen  overflow-hidden relative'>
                                           {/* Side nav */}
-                                          <div className='md:h-full max-md:fixed bottom-0 w-full md:w-[80px]   bg-accent dark:bg-accent/45 border-r'>
+                                          <div className='md:h-full max-md:hidden bottom-0 w-full md:w-[80px]   bg-accent dark:bg-accent/45 border-r'>
                                                 <SideNav />
+                                          </div>
+                                          {/* Mobile nav */}
+                                          <div className='md:hidden'>
+                                                <MobileNav />
+                                          </div>
+                                          <div>
+
                                           </div>
                                           {/* Users */}
                                           <div className='h-full min-w-[20rem] w-[24%] bg-card border-r'>

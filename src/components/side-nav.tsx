@@ -4,7 +4,7 @@ import { useTabContext } from '@/context/TabContext'
 import React, { ReactNode } from 'react'
 import ProfileCard from './ProfileCard';
 
-const links = [
+export const links = [
       { href: '/home', label: 'Home' },
       { href: '/home/contacts', label: 'All users' },
       { href: '/home/users', label: 'Contacts' },
@@ -17,9 +17,6 @@ const SideNav = () => {
       return (
             <aside className="w-full text-white/60 px-3 flex flex-col h-screen    py-6">
                   <ProfileCard />
-                  {/* <div className='flex justify-center'>
-                        <div className='w-[40px]  flex items-center aspect-square rounded-full ring bg-card'></div>
-                  </div> */}
                   <div className='w-full h-px bg-slate-500/30 mt-4'></div>
                   <div className='flex flex-col flex-1 justify-between'>
                         <ul className='mt-5 gap-1 flex-col items-center flex'>
@@ -57,7 +54,7 @@ export default SideNav
 
 
 
-const Svgs: ReactNode[] = [
+export const Svgs: ReactNode[] = [
       <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" className="text-2xl" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 2H8C4.691 2 2 4.691 2 8v13a1 1 0 0 0 1 1h13c3.309 0 6-2.691 6-6V8c0-3.309-2.691-6-6-6zm4 14c0 2.206-1.794 4-4 4H4V8c0-2.206 1.794-4 4-4h8c2.206 0 4 1.794 4 4v8z"></path><path d="M7 9h10v2H7zm0 4h7v2H7z"></path></svg>,
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-2xl"><path d="M18 21a8 8 0 0 0-16 0" /><circle cx="10" cy="8" r="5" /><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" /></svg>,
       <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" className="text-2xl" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><g><path fill="none" d="M0 0h24v24H0z"></path><path d="M19 7h5v2h-5V7zm-2 5h7v2h-7v-2zm3 5h4v2h-4v-2zM2 22a8 8 0 1 1 16 0h-2a6 6 0 1 0-12 0H2zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"></path></g></svg>,
