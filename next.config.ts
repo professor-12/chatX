@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
             { hostname: "encrypted-tbn0.gstatic.com", protocol: "https" },
         ],
     },
+    output: "standalone",
     /* config options here */
 };
 
