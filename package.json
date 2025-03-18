@@ -5,8 +5,7 @@
     "scripts": {
         "dev": "next dev",
         "dev:socket": "NODE_OPTIONS='--loader ts-node/esm --trace-warnings --no-warnings' ts-node server.mts",
-        "build": "next build",
-        "build:socket": "NODE_ENV=production ts-node server.ts",
+        "build": "NODE_OPTIONS='--loader ts-node/esm --trace-warnings --no-warnings' ts-node server.mts",
         "start": "next start",
         "lint": "next lint"
     },
