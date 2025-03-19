@@ -3,7 +3,7 @@ import next from "next";
 import { Server } from "socket.io";
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
+const hostname = dev ? "localhost" : "0.0.0.0";
 const port = process.env.PORT || 3000;
 
 const app = next({ dev, hostname, port: port as number });
@@ -22,7 +22,6 @@ app.prepare().then(() => {
         });
         socket.on("send-message", ({ senderId, receiverId, message }) => {
             const socketId = connectedUsers.get(receiverId);
-            console.log({ senderId, receiverId, message });
             if (!socketId) return;
             io.to(socketId).emit("get-message", { senderId, message });
         });
