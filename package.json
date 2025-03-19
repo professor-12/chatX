@@ -7,7 +7,7 @@
         "build": "next build",
         "dev:socket": "NODE_OPTIONS='--loader ts-node/esm --trace-warnings --no-warnings' ts-node server.mts",
         "build:socket": "NODE_OPTIONS='--loader ts-node/esm --trace-warnings --no-warnings' NODE_ENV=production ts-node server.mts",
-        "start": "NODE_OPTIONS='--loader ts-node/esm --trace-warnings --no-warnings' NODE_ENV=production ts-node server.mts",
+        "start": "next start",
         "lint": "next lint"
     },
     "type": "module",
