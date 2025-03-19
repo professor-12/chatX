@@ -18,7 +18,6 @@ app.prepare().then(() => {
         socket.on("joined", (id) => {
             if (connectedUsers.has(id)) return;
             connectedUsers.set(id, socket.id);
-            console.log(connectedUsers);
         });
         socket.on("send-message", ({ senderId, receiverId, message }) => {
             const socketId = connectedUsers.get(receiverId);
