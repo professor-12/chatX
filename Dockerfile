@@ -8,11 +8,10 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
 ARG PORT
 ENV NODE_ENV=production
-
 ENV PORT=${PORT}
 
+EXPOSE 1000
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "build:socket"]

@@ -41,7 +41,7 @@ app.prepare().then(() => {
         .once("error", (err: any) => {
             process.exit(1);
         })
-        .listen(port, () => {
+        .listen(port, "0.0.0.0", () => {
             console.log(`> Ready on http://0.0.0.0:${port}`);
         });
 });
