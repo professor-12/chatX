@@ -6,14 +6,12 @@ import ChatContext from '@/context/ChatContext'
 import SocketContext from '@/context/socket-context'
 import TabComponent from '@/context/TabContext'
 import UserContext from '@/context/user-context'
-import useMobile from '@/hooks/useMobile'
 import { checkAuth } from '@/lib/_server/auth'
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import React, { FC, ReactNode } from 'react'
+import Component from './Component'
 
 const Layout: FC<{ children: ReactNode }> = async (props) => {
-      const isMobile = useMobile()
       const { data, error } = await checkAuth()
       if (error == ERROR_CONSTANT.NOT_AUTHORIZED) {
             return redirect("/login")
@@ -25,31 +23,9 @@ const Layout: FC<{ children: ReactNode }> = async (props) => {
                               <TabComponent>
                                     {/* Mobile */}
                                     {/* Desktop */}
-                                    {
-                                          !isMobile &&
-                                          <>
-                                                <div className='w-full flex h-screen  overflow-hidden relative'>
-                                                      {/* Side nav */}
-                                                      <div className='md:h-full max-md:hidden bottom-0 w-full md:w-[80px]   bg-accent dark:bg-accent/45 border-r'>
-                                                            <SideNav />
-                                                      </div>
-                                                      {/* Mobile nav */}
-                                                      <div className='md:hidden'>
-                                                            <MobileNav />
-                                                      </div>
-                                                      <div>
-
-                                                      </div>
-                                                      {/* Users */}
-                                                      <div className='h-full min-w-[20rem] w-[24%] bg-card border-r'>
-                                                            <TabContainer />
-                                                      </div>
-                                                      <div className='h-full flex-[3] bg-card border-r'>
-                                                            {props.children}
-                                                      </div>
-                                                </div>
-                                          </>
-                                    }
+                                    <Component>
+                                          {props.children}
+                                    </Component>
                               </TabComponent>
                         </ChatContext>
                   </SocketContext>
