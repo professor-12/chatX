@@ -99,6 +99,7 @@ export const createuser = async (prevstate: User, data: FormData) => {
             sameSite: "strict",
         });
     } catch (err: any) {
+        console.log(err);
         return { error: "Error signing in ", data: null };
     }
     redirect("/");
