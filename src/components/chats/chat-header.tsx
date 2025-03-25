@@ -12,9 +12,8 @@ const ChatHeader = () => {
             }
       })
       return (
-            <div className='h-16 sti backdrop:blur-sm flex px-5 items-center  border-border border-b'>
-
-                  <div className='flex gap-4 items-center'>
+            <div className='h-16 max-md:bg-white w-full z-[233] max-md:fixed max-md:top-0 backdrop:blur-sm flex px-5 items-center  border-border border-b'>
+                  <div className='flex max-md:py-3 gap-4 items-center'>
                         <div className='h-10 aspect-square rounded-full overflow-hidden bg-card border-border border'>
                               {
                                     !!(data?.data?.profilePics) &&
