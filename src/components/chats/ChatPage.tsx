@@ -4,7 +4,7 @@ import ChatSection from './chat-section'
 
 const ChatPage = () => {
       return (
-            <main className='h-screen flex justify-between flex-col pb-12'>
+            <main className='h-screen flex justify-between flex-col md:pb-12'>
                   <ChatHeader />
                   <ChatSection />
             </main>

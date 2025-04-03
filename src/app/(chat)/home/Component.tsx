@@ -1,6 +1,6 @@
 "use client"
 import MobilePage from '@/components/(mobile)/MobilePage'
-import MobileNav from '@/components/mobile/SideNav'
+import MobileNav, { SmallNav } from '@/components/mobile/SideNav'
 import SideNav from '@/components/side-nav'
 import TabContainer from '@/components/tabs/tabcontainer'
 import useMobile from '@/hooks/useMobile'
@@ -9,7 +9,10 @@ import React from 'react'
 const Component = ({ children }) => {
       const isMobile = useMobile()
       return (isMobile ?
-            <MobilePage />
+            <div className='h-screen flex flex-col'>
+                  <MobilePage />
+                  <SmallNav />
+            </div>
             :
             <>
                   <div className='w-full flex h-screen  overflow-hidden relative'>

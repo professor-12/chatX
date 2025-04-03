@@ -4,10 +4,7 @@ import MobileNav from '../mobile/SideNav'
 
 const MobilePage = () => {
       return (
-            <div className='h-screen overflow-hidden max-h-screen flex flex-col'>
-                  <TabContainer />
-                  <MobileNav/>
-            </div>
+            <TabContainer />
       )
 }
 
