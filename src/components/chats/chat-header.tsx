@@ -22,7 +22,6 @@ const ChatHeader = () => {
                         </div>
                         <p className='text-xl font-medium'>{data?.data?.name}</p>
                   </div>
-
             </div>
       )
 }

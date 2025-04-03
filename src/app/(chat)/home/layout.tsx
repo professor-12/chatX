@@ -1,6 +1,3 @@
-import MobileNav from '@/components/mobile/SideNav'
-import SideNav from '@/components/side-nav'
-import TabContainer from '@/components/tabs/tabcontainer'
 import { ERROR_CONSTANT } from '@/constants/error'
 import ChatContext from '@/context/ChatContext'
 import SocketContext from '@/context/socket-context'
@@ -21,8 +18,6 @@ const Layout: FC<{ children: ReactNode }> = async (props) => {
                   <SocketContext>
                         <ChatContext>
                               <TabComponent>
-                                    {/* Mobile */}
-                                    {/* Desktop */}
                                     <Component>
                                           {props.children}
                                     </Component>
