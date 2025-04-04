@@ -46,7 +46,7 @@ const ContactTab = () => {
                                                 data?.data?.length == 0 ? <p className='text-center text-lg'>No Contacts found</p> :
                                                       data?.data?.map(({ contact }, index) => {
                                                             return <ContactCard
-                                                                  key={index} contact={contact} />
+                                                                  key={contact.id + index} contact={contact} />
                                                       })
                                           }
                                     </div>
