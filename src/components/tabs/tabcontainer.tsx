@@ -16,7 +16,7 @@ const TabContainer = () => {
       const { activeTab } = useTabContext()
       const { selectedChat } = useChatContext()
       return (
-            <div className={`${isMobile ? "p-4" : "p-6"} h-screen py-4 overflow-hidden`}>
+            <div className={`${isMobile ? "p-4" : "p-6"} h-[100dvh] py-4 overflow-hidden`}>
                   {
                         activeTab == "home" && !isMobile && <Chat />
                   }

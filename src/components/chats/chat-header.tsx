@@ -12,10 +12,10 @@ const ChatHeader = () => {
             }
       })
       return (
-            <div className='h-16 max-md:bg-white w-full z-[233] max-md:fixed max-md:top-0 backdrop:blur-sm flex px-5 items-center  border-border border-b'>
+            <div className='h-16 max-md:bg-white top-0 max-md:fixed w-full z-[233] max-md:top-0 backdrop:blur-sm flex px-5 items-center  border-border border-b'>
                   <div className='flex max-md:py-3 gap-4 items-center'>
                         <p className='text-sm mdL:hidden' onClick={() => setSelectedChat("")}>
-                              back
+                              {"<"}
                         </p>
                         <div className='h-10 aspect-square rounded-full overflow-hidden bg-card border-border border'>
                               {

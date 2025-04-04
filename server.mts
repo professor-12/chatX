@@ -17,6 +17,7 @@ app.prepare().then(() => {
     io.on("connection", (socket) => {
         socket.on("joined", (id) => {
             if (connectedUsers.has(id)) return;
+            console.log("A user joined");
             connectedUsers.set(id, socket.id);
         });
         socket.on("send-message", ({ senderId, receiverId, message }) => {
