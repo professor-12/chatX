@@ -4,9 +4,8 @@ import MobileNav, { SmallNav } from '@/components/mobile/SideNav'
 import SideNav from '@/components/side-nav'
 import TabContainer from '@/components/tabs/tabcontainer'
 import { useChatContext } from '@/context/ChatContext'
-import { useTabContext } from '@/context/TabContext'
 import useMobile from '@/hooks/useMobile'
-import React, { act } from 'react'
+import React  from 'react'
 
 const Component = ({ children }) => {
       const isMobile = useMobile()
