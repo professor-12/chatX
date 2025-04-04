@@ -28,7 +28,14 @@ const TabContainer = () => {
                               : <Chat />)
                   }
                   {
-                        activeTab == "contacts" && <ContactTab />
+                        activeTab == "contacts" && !isMobile && <ContactTab />
+                  }
+                  {
+                        (activeTab == "contacts" && isMobile) && (selectedChat ?
+                              <div className='py-4'>
+                                    <ChatPage />
+                              </div>
+                              : <ContactTab />)
                   }
                   {
                         activeTab == "profile" && <ProfileTab />
