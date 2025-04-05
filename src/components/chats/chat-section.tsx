@@ -5,11 +5,12 @@ import React, { RefObject, useEffect, useRef, useState } from 'react'
 import ChatContainer from './chat-container';
 import useSocket from '@/hooks/useSocket';
 import { useUserContext } from '@/context/user-context';
+import Skeleton from 'react-loading-skeleton';
 
 const ChatSection = () => {
       const { userId } = useUserContext()
       const { socket } = useSocket()
-      const { selectedChat: id, chats, setChats, lastChatQuery } = useChatContext()
+      const { selectedChat: id, chats, setChats, lastChatQuery, fetchingChat } = useChatContext()
       const [userInput, setUserInput] = useState("")
       const inputref = useRef(undefined) as unknown as RefObject<HTMLInputElement> | undefined
       useEffect(() => {
@@ -22,6 +23,7 @@ const ChatSection = () => {
 
       const handleSendMessage = async () => {
             if (userInput.trim().length == 0) return;
+            setUserInput("")
             const temp = [...chats]
             setChats(prev => [...prev, {
                   "receiverId": id,
@@ -36,8 +38,12 @@ const ChatSection = () => {
                   setUserInput("")
                   lastChatQuery.refetch()
             } catch (err) {
+                  console.log(err)
                   return;
             }
+      }
+      if (fetchingChat) {
+            return <ChatSectionLoadingSkeleton />
       }
       return (
             <>
@@ -51,5 +57,44 @@ const ChatSection = () => {
                   </div>
             </>
       )
+}
+
+
+const ChatSectionLoadingSkeleton = () => {
+
+      return <div className='flex justify-end p-4 flex-col gap-1 flex-1 w-full'>
+            <div className='flex w-full justify-end'>
+                  <Skeleton width={"100px"} height={"30px"} />
+            </div>
+            <div className=''>
+                  <Skeleton width={"500px"} height={"80px"} />
+            </div>
+            <div className='flex w-full justify-end'>
+                  <Skeleton width={"500px"} height={"80px"} />
+            </div>
+            <div className='flex w-full justify-end'>
+                  <Skeleton width={"500px"} height={"80px"} />
+            </div>
+            <div>
+                  <Skeleton width={"500px"} height={"80px"} />
+            </div>
+            <div className='flex w-full justify-end'>
+                  <Skeleton width={"500px"} height={"80px"} />
+            </div>
+            <div className='flex w-full justify-end'>
+                  <Skeleton width={"500px"} height={"80px"} />
+            </div>
+            <div>
+                  <Skeleton width={"10%"} height={"40px"} />
+            </div>
+            <div>
+                  <Skeleton width={"40%"} height={"30px"} />
+            </div>
+            <div className='flex w-full justify-end'>
+                  <Skeleton width={"40%"} height={"80px"} />
+            </div>
+
+      </div>
+
 }
 export default ChatSection

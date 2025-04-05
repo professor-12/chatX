@@ -156,6 +156,7 @@ export const loginuser = async (prevstate: User, data: FormData) => {
             sameSite: "strict",
         });
     } catch (err: any) {
+        console.log(err);
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
     redirect("/");
