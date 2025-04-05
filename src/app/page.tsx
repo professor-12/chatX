@@ -44,7 +44,7 @@ export default function Home() {
           <path d="M2 12h4" />
           <path d="m4.9 4.9 2.9 2.9" />
         </svg>
-        </div> : <div className="flex items-center justify-center h-full">Redirecting..</div>
+        </div> : <div className="flex items-center justify-center h-full">Checking system health..</div>
       }
     </div>
   );
