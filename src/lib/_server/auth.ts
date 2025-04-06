@@ -12,12 +12,6 @@ interface User {
     username: string;
 }
 
-interface AuthAction {
-    data: null | Record<string, string | any> | string;
-    error: null | any;
-    defaultValue?: any;
-}
-
 export const createuser = async (prevstate: User, data: FormData) => {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
@@ -161,31 +155,33 @@ export const loginuser = async (prevstate: User, data: FormData) => {
     }
     redirect("/");
 };
-export const checkAuth = async (): Promise<{
-    error: string | null;
-    data: string | null;
-}> => {
+
+export const checkAuth = async (): Promise<
+    | {
+          error: string | null;
+          data: string | null;
+      }
+    | never
+> => {
     try {
         const token = (await cookies()).get("token");
         if (!token?.value) {
-            return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
+            redirect("/auth/login");
         }
-
         const { sessionId } = (await verifyToken(token.value as string)) as {
             sessionId: string;
         };
         if (!sessionId) {
-            return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
+            redirect("/auth/login");
         }
         const session = await prisma.session.findUnique({
             where: { id: sessionId, createdAt: { lt: new Date(Date.now()) } },
         });
-
         if (!session) {
-            return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
+            redirect("/auth/login");
         }
         return { error: null, data: session.userId };
     } catch (err: any) {
-        return { error: "Unauthorized", data: null };
+        return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
 };

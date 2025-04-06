@@ -4,13 +4,7 @@ import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
 
 export const getContact = async () => {
-    const { data, error } = await checkAuth();
-    if (error) {
-        return { data: null, error };
-    }
-    if (!data) {
-        return { data: null };
-    }
+    const { data } = await checkAuth();
     try {
         const userContacts = await prisma.contact.findMany({
             where: { userId: data },
@@ -23,13 +17,7 @@ export const getContact = async () => {
 };
 
 export const createContact = async (contactId: string) => {
-    const { data, error } = await checkAuth();
-    if (error) {
-        throw new Error(error);
-    }
-    if (!data) {
-        return { data: null };
-    }
+    const { data } = await checkAuth();
     try {
         const newContact = await prisma.contact.create({
             data: {
@@ -44,7 +32,7 @@ export const createContact = async (contactId: string) => {
 };
 
 export const allUser = async () => {
-    const { data, error } = await checkAuth();
+    const { data } = await checkAuth();
     if (!data) {
         return { error: null };
     }
@@ -63,13 +51,7 @@ export const allUser = async () => {
 };
 
 export const getContacts = async () => {
-    const { data, error } = await checkAuth();
-    if (error) {
-        return { error: "not authorized", data: null };
-    }
-    if (!data) {
-        return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
-    }
+    const { data } = await checkAuth();
     try {
         const contacts = await prisma.contact.findMany({
             where: {
