@@ -42,7 +42,7 @@ const ChatSection = () => {
                   return;
             }
       }
-      if (fetchingChat) {
+      if (true) {
             return <ChatSectionLoadingSkeleton />
       }
       return (
@@ -62,36 +62,30 @@ const ChatSection = () => {
 
 const ChatSectionLoadingSkeleton = () => {
 
-      return <div className='flex justify-end p-4 flex-col gap-1 flex-1 w-full'>
+      return <div className='flex py-12 justify-en p-4 flex-col gap-1 flex-1 w-full'>
             <div className='flex w-full justify-end'>
-                  <Skeleton width={"100px"} height={"30px"} />
+                  <Skeleton className='!rounded-br-none !rounded-2xl' width={"100px"} height={"40px"} />
             </div>
             <div className=''>
-                  <Skeleton width={"500px"} height={"80px"} />
-            </div>
-            <div className='flex w-full justify-end'>
-                  <Skeleton width={"500px"} height={"80px"} />
-            </div>
-            <div className='flex w-full justify-end'>
-                  <Skeleton width={"500px"} height={"80px"} />
+                  <Skeleton className='!rounded-bl-none !rounded-2xl' width={"200px"} height={"60px"} />
             </div>
             <div>
-                  <Skeleton width={"500px"} height={"80px"} />
+                  <Skeleton className='!rounded-bl-none !rounded-2xl' width={"100px"} height={"40px"} />
             </div>
             <div className='flex w-full justify-end'>
-                  <Skeleton width={"500px"} height={"80px"} />
+                  <Skeleton className='!rounded-xl' width={"300px"} height={"200px"} />
             </div>
             <div className='flex w-full justify-end'>
-                  <Skeleton width={"500px"} height={"80px"} />
+                  <Skeleton className='!rounded-br-none !rounded-2xl' width={"500px"} height={"80px"} />
             </div>
             <div>
-                  <Skeleton width={"10%"} height={"40px"} />
+                  <Skeleton className='!rounded-bl-none !rounded-2xl' width={"10rem"} height={"40px"} />
             </div>
             <div>
-                  <Skeleton width={"40%"} height={"30px"} />
+                  <Skeleton className='!rounded-bl-none !rounded-2xl' width={"7rem"} height={"40px"} />
             </div>
             <div className='flex w-full justify-end'>
-                  <Skeleton width={"40%"} height={"80px"} />
+                  <Skeleton className='!rounded-br-none !rounded-2xl' width={"8rem"} height={"40px"} />
             </div>
 
       </div>

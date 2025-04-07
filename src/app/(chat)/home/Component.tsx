@@ -5,12 +5,11 @@ import SideNav from '@/components/side-nav'
 import TabContainer from '@/components/tabs/tabcontainer'
 import { useChatContext } from '@/context/ChatContext'
 import useMobile from '@/hooks/useMobile'
-import React  from 'react'
+import React from 'react'
 
 const Component = ({ children }) => {
       const isMobile = useMobile()
       const { selectedChat } = useChatContext()
-      // console.log(activeTab)
       return (isMobile ?
             <div className='h-[100dvh] relative flex flex-col'>
                   <MobilePage />
@@ -21,7 +20,6 @@ const Component = ({ children }) => {
             </div>
             :
             <div className='w-full flex h-screen  overflow-hidden relative'>
-                  {/* Desktop Screen Side navigation bar */}
                   <div className='md:h-full max-md:hidden bottom-0 w-full md:w-[80px]   bg-accent dark:bg-accent/45 border-r'>
                         <SideNav />
                   </div>

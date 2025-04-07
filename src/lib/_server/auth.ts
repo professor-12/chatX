@@ -157,28 +157,24 @@ export const loginuser = async (prevstate: User, data: FormData) => {
 };
 
 export const checkAuth = async (): Promise<
-    | {
-          error: string | null;
-          data: string | null;
-      }
-    | never
+    { error: string | null; data: string | null } | never
 > => {
     try {
         const token = (await cookies()).get("token");
         if (!token?.value) {
-            redirect("/auth/login");
+            redirect("/login");
         }
         const { sessionId } = (await verifyToken(token.value as string)) as {
             sessionId: string;
         };
         if (!sessionId) {
-            redirect("/auth/login");
+            redirect("/login");
         }
         const session = await prisma.session.findUnique({
             where: { id: sessionId, createdAt: { lt: new Date(Date.now()) } },
         });
         if (!session) {
-            redirect("/auth/login");
+            redirect("/login");
         }
         return { error: null, data: session.userId };
     } catch (err: any) {

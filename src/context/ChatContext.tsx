@@ -1,10 +1,9 @@
 "use client"
 import useSocket from '@/hooks/useSocket'
 import { getChats, getMessages } from '@/lib/_server/api'
-import { checkAuth } from '@/lib/_server/auth'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useUserContext } from './user-context'
-import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
+import { useQuery, UseQueryResult } from '@tanstack/react-query'
 
 interface IContext {
       selectedChat: null | string
@@ -46,6 +45,7 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
 
       const fetchChat = async () => {
             if (!selectedChat) return
+            setFetchingChat(true)
             const message = await getMessages(selectedChat)
             setChats(message.data as any)
             setFetchingChat(false)

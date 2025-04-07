@@ -69,13 +69,7 @@ export const createMessage = async (): Promise<{
     error: string | null;
     data: any;
 }> => {
-    const { data, error } = await checkAuth();
-    if (error) {
-        return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
-    }
-    if (!data) {
-        return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
-    }
+    const { data } = await checkAuth();
     try {
         const message = await prisma.message.create({
             data: {
@@ -91,10 +85,7 @@ export const createMessage = async (): Promise<{
 };
 
 export const getChats = async () => {
-    const { data, error } = await checkAuth();
-    if (!data) {
-        return { error };
-    }
+    const { data } = await checkAuth();
     try {
         const recentChats = await prisma.message.findMany({
             distinct: ["senderId", "receiverId"],
@@ -152,13 +143,9 @@ export const getChats = async () => {
 };
 
 export const addToContact = async (id: string) => {
-    const { data, error } = await checkAuth();
-
-    if (error) {
-        return { error, data };
-    }
+    const { data } = await checkAuth();
     try {
-        const usercontact = await prisma.contact.create({
+        await prisma.contact.create({
             data: {
                 contactId: id,
                 userId: data as string,
@@ -171,10 +158,7 @@ export const addToContact = async (id: string) => {
 };
 
 export async function checkcontact(id: string) {
-    const { data, error } = await checkAuth();
-    if (error) {
-        return { error };
-    }
+    const { data } = await checkAuth();
     try {
         const isContact = await prisma.contact.findFirst({
             where: {
@@ -189,9 +173,7 @@ export async function checkcontact(id: string) {
 }
 
 export const getMessages = async (id: string) => {
-    const { data, error } = await checkAuth();
-    if (error) return { error };
-
+    const { data } = await checkAuth();
     try {
         const messages = await prisma.message.findMany({
             where: {
