@@ -1,33 +1,39 @@
 "use client"
 import { useChatContext } from '@/context/ChatContext';
 import { sendMessage } from '@/lib/_server/api';
-import React, { RefObject, useEffect, useRef, useState } from 'react'
+import React, { RefObject, useEffect, useId, useRef, useState } from 'react'
 import ChatContainer from './chat-container';
 import useSocket from '@/hooks/useSocket';
 import { useUserContext } from '@/context/user-context';
 import Skeleton from 'react-loading-skeleton';
+import useMobile from '@/hooks/useMobile';
 
 const ChatSection = () => {
+      const randomId = useId()
       const { userId } = useUserContext()
+      const isInMobile = useMobile()
       const { socket } = useSocket()
+      const [isSendingMessage, setIsSendingMessage] = useState(false)
       const { selectedChat: id, chats, setChats, lastChatQuery, fetchingChat } = useChatContext()
       const [userInput, setUserInput] = useState("")
       const inputref = useRef(undefined) as unknown as RefObject<HTMLInputElement> | undefined
       useEffect(() => {
-            if (inputref) {
+            if (inputref && !isInMobile) {
                   if (inputref.current) {
                         inputref.current.focus()
                   }
             }
-      }, [inputref, id])
+      }, [inputref, id, isInMobile])
 
       const handleSendMessage = async () => {
             if (userInput.trim().length == 0) return;
+            setIsSendingMessage(true)
+            if (isSendingMessage) return
             setUserInput("")
             const temp = [...chats]
             setChats(prev => [...prev, {
-                  "receiverId": id,
-                  "senderId": userId,
+                  "receiverId": id ?? randomId + randomId,
+                  "senderId": userId ?? randomId,
                   "message": userInput,
                   notsent: true,
             }] as any)
@@ -40,9 +46,11 @@ const ChatSection = () => {
             } catch (err) {
                   console.log(err)
                   return;
+            } finally {
+                  setIsSendingMessage(false)
             }
       }
-      if (true) {
+      if (fetchingChat) {
             return <ChatSectionLoadingSkeleton />
       }
       return (

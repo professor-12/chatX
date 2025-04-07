@@ -9,7 +9,7 @@ const ChatContainer = ({ chats }: { chats: Array<any> }) => {
             ref.current?.scrollIntoView({ behavior: "smooth" })
       }, [ref, chats])
       return (
-            <section className='flex-1 flex flex-col scroll-hidden overflow-y-auto  p-4 gap-3'>
+            <section className='flex-1 max-md:pt-[8rem] flex flex-col scroll-hidden overflow-y-auto  p-4 gap-3'>
                   <div className="mt-auto">
                         {
                               chats.map((chat, key) => {
