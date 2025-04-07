@@ -10,7 +10,9 @@ datasource db {
   provider = "postgresql"
   url     = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+  
 }
+
 
 model User {
   id String @map("_id") @id @default(cuid())
@@ -46,10 +48,8 @@ model Session {
   id String @map("_id") @id @default(cuid())
   userId      String 
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   expiresAt   DateTime
   createdAt   DateTime @default(now())
-
   @@index([userId]) 
 
 }

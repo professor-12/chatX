@@ -213,8 +213,6 @@ export const getContactPRofile = async (id: string) => {
 
 export const getUserProfile = async () => {
     const { data, error } = await checkAuth();
-    if (error) return { error };
-
     try {
         const profile = await prisma.profile.findFirst({
             where: {
@@ -247,7 +245,6 @@ export const sendMessage = async ({
     file?: string;
 }) => {
     const { data, error } = await checkAuth();
-    if (error) return { error };
     if (!message && !file) return;
     try {
         const _message = await prisma.message.create({

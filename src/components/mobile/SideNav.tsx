@@ -8,7 +8,7 @@ const MobileNav = () => {
       return (
             <>
                   <footer className='fixed bottom-0 left-0 transition-all flex  p-3'>
-                        <div className='rounded-full backdrop-blur-sm mx-auto'>
+                        <div className='backdrop-blur-sm mx-auto'>
                               <ul className='gap-1 p-3 backdrop-blur-sm   bg-slate-300/50 rounded-full px-5  mx-auto items-center flex'>
                                     {
                                           new Array(4).fill(null).map((_, index) => {
@@ -35,9 +35,9 @@ export default MobileNav
 
 export const SmallNav = () => {
       const { activeTab, changeActiveTab } = useTabContext()
-      return (<footer className='p-3'>
-            <div className='rounded-full backdrop-blur-sm mx-auto'>
-                  <ul className='gap-1 p-3 backdrop-blur-sm   bg-slate-300/50 rounded-full px-5  mx-auto items-center justify-between flex'>
+      return (<footer className='pb-1'>
+            <div className='backdrop-blur-sm mx-auto'>
+                  <ul className='gap-1 p-2 backdrop-blur-sm w-[60%]  rounded-full  bg-slate-300/50  px-5  mx-auto items-center justify-between flex'>
                         {
                               new Array(4).fill(null).map((_, index) => {
                                     const link = links[index].href.split("/")[2] || "home"
