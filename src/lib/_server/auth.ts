@@ -160,24 +160,29 @@ export const checkAuth = async (): Promise<
     { error: string | null; data: string | null } | never
 > => {
     try {
-        const token = (await cookies()).get("token");
-        if (!token?.value) {
-            redirect("/login");
-        }
-        const { sessionId } = (await verifyToken(token.value as string)) as {
+        const token = (await cookies()).get("token")?.value;
+        if (!token) throw new Error("/login", { cause: "unauthorized_access" });
+
+        const { sessionId } = (await verifyToken(token)) as {
             sessionId: string;
         };
-        if (!sessionId) {
-            redirect("/login");
-        }
-        const session = await prisma.session.findUnique({
-            where: { id: sessionId, createdAt: { lt: new Date(Date.now()) } },
+        if (!sessionId)
+            throw new Error("/login", { cause: "unauthorized_access" });
+
+        const session = await prisma.session.findFirst({
+            where: { id: sessionId, createdAt: { lt: new Date() } },
         });
-        if (!session) {
+        if (!session)
+            throw new Error("/login", { cause: "unauthorized_access" });
+
+        return { error: null, data: session.userId };
+    } catch (err) {
+        console.log(err);
+        console.log(err.cause);
+        if (err.cause === "unauthorized_access") {
             redirect("/login");
         }
-        return { error: null, data: session.userId };
-    } catch (err: any) {
+        console.error("Auth error:", err);
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
 };
