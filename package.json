@@ -9,7 +9,8 @@
         "build:socket": "next build && tsc --project tsconfig.server.json",
         "start:socket": "NODE_ENV=production node dist/server.mjs",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "prisma:studio": "prisma studio"
     },
     "type": "module",
     "dependencies": {

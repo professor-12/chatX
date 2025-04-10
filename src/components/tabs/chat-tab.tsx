@@ -1,6 +1,7 @@
 "use client"
 import { useChatContext } from '@/context/ChatContext'
 import { useUserContext } from '@/context/user-context'
+import { createGroupChat } from '@/lib/_server/api'
 import React from 'react'
 
 const Chat = () => {
@@ -10,9 +11,14 @@ const Chat = () => {
             <div className='h-full flex flex-col'>
                   <div className='flex justify-between items-center'>
                         <h1 className='text-2xl text-left'>Chats</h1>
-                        <span className='dark:text-accent-foreground/95 cursor-pointer'>
-                              <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 640 512" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM504 312l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"></path></svg>
-                        </span>
+                        <div className='flex items-center gap-3'>
+                              <span className='dark:text-accent-foreground/95 cursor-pointer'>
+                                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 640 512" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM504 312l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"></path></svg>
+                              </span>
+                              <span className='dark:text-accent-foreground/95 cursor-pointer'>
+                                    <svg onClick={async () => { await createGroupChat() }} xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 24 24" fill='none' stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-users-round-icon lucide-users-round"><path d="M18 21a8 8 0 0 0-16 0" /><circle cx="10" cy="8" r="5" /><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" /></svg>
+                              </span>
+                        </div>
                   </div>
                   <div className='space-y-2 flex-1 scroll-hidden py-2 pt-6  overflow-auto'>
                         {

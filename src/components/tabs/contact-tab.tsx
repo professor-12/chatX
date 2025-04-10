@@ -1,9 +1,8 @@
 "use client"
 import { getContact } from '@/lib/_server/api'
 import { useQuery } from '@tanstack/react-query'
-import React, { Fragment } from 'react'
+import React from 'react'
 import { useChatContext } from '@/context/ChatContext'
-
 
 
 const ContactTab = () => {
