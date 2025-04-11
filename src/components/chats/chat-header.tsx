@@ -1,17 +1,21 @@
 "use client"
 import { useChatContext } from '@/context/ChatContext'
 import { useTabContext } from '@/context/TabContext'
-import { getContactPRofile } from '@/lib/_server/api'
+import { getContactProfile, getGroupProfile } from '@/lib/_server/api'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import Skeleton from 'react-loading-skeleton'
 
 const ChatHeader = () => {
       const { selectedChat, setSelectedChat } = useChatContext()
+
+      const check = () => {
+            return selectedChat.isGroup ? getGroupProfile(selectedChat.id as string) : getContactProfile(selectedChat.id as string)
+      }
       let { changeActiveTab } = useTabContext()
       const { data, isPending } = useQuery({
             queryKey: ["get-user-profile", selectedChat], queryFn: () => {
-                  return getContactPRofile(selectedChat.id as string)
+                  return check()
             }
       })
       return (

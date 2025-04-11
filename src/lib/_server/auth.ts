@@ -72,15 +72,17 @@ export const createuser = async (prevstate: User, data: FormData) => {
                         username: "",
                     },
                 },
+                groupMember: {
+                    connect: { id: "asaddasasadada"  },
+                },
             },
         });
-        const { password: _, ...safeUser } = user;
-
         const session = await prisma.session.create({
             data: {
                 userId: user.id,
                 expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             },
+
         });
         const sessiontoken = await generateToken(
             { sessionId: session.id },
@@ -90,7 +92,7 @@ export const createuser = async (prevstate: User, data: FormData) => {
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+            sameSite: "lax",
         });
     } catch (err: any) {
         console.log(err);

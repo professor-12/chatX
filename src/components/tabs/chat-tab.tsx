@@ -46,7 +46,7 @@ const Chat = () => {
                                                 <path d="m4.9 4.9 2.9 2.9" />
                                           </svg>
                                     </div>
-                              : (lastChatQuery as any)?.data?.data?.length == 0 ? "No Chats found" :
+                                    : (lastChatQuery as any)?.data?.data?.length == 0 ? "No Chats found" :
                                           (lastChatQuery as any).data?.data?.map((_: any, index: any) => {
                                                 return <ChatCard key={index} contact={_} />
                                           })
@@ -64,6 +64,8 @@ export default Chat
 export const ChatCard = ({ contact }: { contact: any }) => {
       const { setSelectedChat } = useChatContext()
       const isGroup = contact?.isGroup
+      console.log(contact.id)
+
       return <div onClick={() => { setSelectedChat({ id: contact.id, isGroup }) }} className='hover:shadow hover:bg-slate-200/80 hover:scale-100 transition-all duration-200 scale-[98%]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
             <div className='flex items-center justify-between'>
                   <div className='flex  items-center gap-1'>

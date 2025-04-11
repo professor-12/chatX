@@ -36,7 +36,7 @@ const ChatSection = () => {
                   notsent: true,
             }] as any)
             try {
-                  let __message: { message: string, receiverId?: string, groupId?: string} = { message: userInput }
+                  let __message: { message: string, receiverId?: string, groupId?: string } = { message: userInput }
                   if (isGroup) {
                         __message["groupId"] = id
                   } else {
@@ -70,11 +70,6 @@ const ChatSection = () => {
             </>
       )
 }
-
-
-
-
-
 
 
 

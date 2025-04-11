@@ -147,6 +147,7 @@ export const getChats = async () => {
                 isGroup: true,
             };
         });
+
         const seen = new Set();
         const removeDuplicate = [...directMessages].filter(
             ({ senderId, receiverId }) => {
@@ -156,6 +157,7 @@ export const getChats = async () => {
                 return true;
             }
         );
+
         const __ = [
             ...removeDuplicate.map((chat) => {
                 const isSender = (chat.senderId as string) === (data as string);
@@ -222,6 +224,7 @@ export const getMessages = async (id: string, isGroup?: boolean) => {
                         },
                     },
                 },
+                include: { sender: { include: { profile: true } } },
             });
         } else {
             messages = await prisma.message.findMany({
@@ -231,6 +234,7 @@ export const getMessages = async (id: string, isGroup?: boolean) => {
                         { senderId: data, receiverId: id as string },
                     ],
                 },
+                include: { sender: { include: { profile: true } } },
             });
         }
         return { data: messages, error: null };
@@ -239,7 +243,8 @@ export const getMessages = async (id: string, isGroup?: boolean) => {
     }
 };
 
-export const getContactPRofile = async (id: string) => {
+export const getContactProfile = async (id: string, isGroup?: boolean) => {
+    await checkAuth();
     try {
         const profile = await prisma.profile.findFirst({
             where: {
@@ -259,6 +264,22 @@ export const getContactPRofile = async (id: string) => {
     } catch (err) {
         return { data: null, error: "An error occured" };
     }
+};
+
+export const getGroupProfile = async (id: string) => {
+    await checkAuth();
+    try {
+        const getGroupInfo = await prisma.group.findFirst({
+            where: { id },
+            omit: {},
+        });
+        const { name, groupPics } = getGroupInfo;
+
+        return {
+            data: { name, profilePics: groupPics, ...getGroupInfo },
+            error: null,
+        };
+    } catch (err) {}
 };
 
 export const getUserProfile = async () => {
@@ -332,3 +353,5 @@ export const createGroupChat = async () => {
         console.log(err);
     }
 };
+
+export const getHeaderDetail = async () => {};
