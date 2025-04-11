@@ -48,7 +48,6 @@ model Group {
   createdAt DateTime
 }
 
-
 model Account {
   id String @map("_id") @id @default(cuid()) 
   providerName String
@@ -59,7 +58,6 @@ model Account {
   user User @relation(references: [id],fields: [userId])
   
 }
-
 
 model Session {
   id String @map("_id") @id @default(cuid())

@@ -30,6 +30,7 @@ export default ChatContainer
 const ChatCard = ({ chat, userId }: { chat: any, userId: string | null }) => {
       const { sender } = chat
       const { selectedChat: { isGroup } } = useChatContext()
+      console.log(sender)
       const isRight = (userId == (chat?.senderId) || !chat?.senderId)
       return <div className={`py-1 w-full  flex ${isRight && "justify-end"}`}>
             <div className={isRight ? "text-right" : ""}>
@@ -37,7 +38,7 @@ const ChatCard = ({ chat, userId }: { chat: any, userId: string | null }) => {
                         {
                               isGroup && !isRight &&
                               <div className="size-[2.5rem] overflow-hidden relative rounded-full bg-slate-400/50">
-                                    <Image alt="sender-pics" width={1000} height={10000} className="w-full h-full" src={sender?.profile?.profilePics} />
+                                    <Image alt="sender-pics" width={400} height={400} className="w-full h-full" src={sender?.profile?.profilePics} />
                               </div>
                         }
                         <div>
@@ -49,16 +50,27 @@ const ChatCard = ({ chat, userId }: { chat: any, userId: string | null }) => {
                                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
                                     </p>
                               }
-                              {
-                                    chat?.createdAt &&
-                                    <span className='p-px text-xs text-muted-foreground text-pretty'>{new Intl.DateTimeFormat().format(new Date(chat?.createdAt))}</span>
-                              }
                         </div>
 
                   </div>
+                  <div className="flex items-center gap-1 mt-1">
+                        {!isRight && isGroup &&
+                              (
+
+                                    <>
+                                          <span className='p-px text-xs text-muted-foreground text-pretty'>{(sender?.name as string).substring(0, 5)} {(sender?.name as string).length > 5 && "..."}</span>
+                                          <div className='w-[0.3rem] h-[0.3rem] rounded-full bg-slate-500'></div>
+                                    </>
+                              )
+                        }
+                        {
+                              chat?.createdAt &&
+                              <span className='p-px text-xs text-muted-foreground text-pretty'>{new Intl.DateTimeFormat().format(new Date(chat?.createdAt))}</span>
+                        }
+                  </div>
             </div>
       </div>
-}
 
+}
 
 
