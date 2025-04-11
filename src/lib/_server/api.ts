@@ -98,10 +98,14 @@ export const getChats = async () => {
                         receiverId: data as string,
                     },
                     {
-                        senderId: data as string,
+                        AND: {
+                            senderId: data as string,
+                            NOT: {
+                                receiverId: null,
+                            },
+                        },
                     },
                 ],
-                groupId: { equals: null },
             },
             include: {
                 sender: {
@@ -128,12 +132,11 @@ export const getChats = async () => {
             include: {
                 group: { include: { members: {} } },
             },
-            distinct: ["senderId", "receiverId", "groupId"],
+            distinct: ["groupId"],
             orderBy: {
                 createdAt: "desc",
             },
         });
-
         const transformedGroupChat = groupChat.map((chat, index) => {
             return {
                 id: chat.group.id,
@@ -144,18 +147,17 @@ export const getChats = async () => {
                 isGroup: true,
             };
         });
-
         const seen = new Set();
-        const removeDuplicate = [, ...directMessages].filter(
+        const removeDuplicate = [...directMessages].filter(
             ({ senderId, receiverId }) => {
                 const pairKey = [senderId, receiverId].sort().join("-");
                 if (seen.has(pairKey)) return false;
                 seen.add(pairKey);
                 return true;
-            }p
+            }
         );
-        const __ = removeDuplicate
-            .map((chat, index) => {
+        const __ = [
+            ...removeDuplicate.map((chat) => {
                 const isSender = (chat.senderId as string) === (data as string);
                 const contact = isSender ? chat.receiver : chat.sender;
                 return {
@@ -167,11 +169,11 @@ export const getChats = async () => {
                     time: chat.createdAt,
                     isGroup: false,
                 };
-            })
-            .concat(transformedGroupChat);
+            }),
+            ...transformedGroupChat,
+        ];
         return { data: __ };
     } catch (err) {
-        console.log(err);
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
 };
@@ -206,19 +208,31 @@ export async function checkcontact(id: string) {
     }
 }
 
-export const getMessages = async (id: string) => {
+export const getMessages = async (id: string, isGroup?: boolean) => {
     const { data } = await checkAuth();
-    console.log(data, id);
+    let messages: any;
     try {
-        const messages = await prisma.message.findMany({
-            where: {
-                OR: [
-                    { receiverId: data, senderId: id },
-                    { senderId: data, receiverId: id as string },
-                ],
-            },
-        });
-        console.log(messages);
+        if (isGroup) {
+            messages = await prisma.message.findMany({
+                where: {
+                    groupId: id,
+                    group: {
+                        members: {
+                            some: { id: data },
+                        },
+                    },
+                },
+            });
+        } else {
+            messages = await prisma.message.findMany({
+                where: {
+                    OR: [
+                        { receiverId: data, senderId: id },
+                        { senderId: data, receiverId: id as string },
+                    ],
+                },
+            });
+        }
         return { data: messages, error: null };
     } catch (err) {
         return { error: "An error occured", data: null };
@@ -275,10 +289,12 @@ export const sendMessage = async ({
     receiverId,
     message,
     file,
+    groupId,
 }: {
-    receiverId: string;
+    receiverId?: string;
     message?: string;
     file?: string;
+    groupId?: string;
 }) => {
     const { data } = await checkAuth();
     if (!message && !file) return;
@@ -289,6 +305,7 @@ export const sendMessage = async ({
                 senderId: data as string,
                 message,
                 picture: file,
+                groupId,
             },
         });
         return { data: _message, error: null };
@@ -310,7 +327,6 @@ export const createGroupChat = async () => {
                 createdAt: new Date(Date.now()),
             },
         });
-        console.log(group);
         return { data: group };
     } catch (err) {
         console.log(err);

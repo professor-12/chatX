@@ -62,7 +62,7 @@ export default ContactTab
 export const ContactCard = ({ contact }: { contact: any }) => {
       const { setSelectedChat } = useChatContext()
       return (
-            <div onClick={() => { setSelectedChat(contact.id) }} className='hover:bg-slate-200/80  to-card hover:scale-100 cursor-pointer transition-all duration-200 scale-[0.9999]  py-[0.75rem] px-2 border-border  rounded-xl'>
+            <div onClick={() => { setSelectedChat({ id: contact.id, isGroup: false }) }} className='hover:bg-slate-200/80  to-card hover:scale-100 cursor-pointer transition-all duration-200 scale-[0.9999]  py-[0.75rem] px-2 border-border  rounded-xl'>
                   <div className=''>
                         <div className='flex group  items-center gap-3'>
                               <img

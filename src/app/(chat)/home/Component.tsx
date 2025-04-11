@@ -14,7 +14,7 @@ const Component = ({ children }) => {
             <div className='h-[100dvh] relative flex flex-col'>
                   <MobilePage />
                   {
-                        !selectedChat &&
+                        !selectedChat.id &&
                         <SmallNav />
                   }
             </div>

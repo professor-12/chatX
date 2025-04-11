@@ -6,7 +6,9 @@ const useMobile = () => {
     const [isMobile, setIsMobile] = useState(null);
     useEffect(() => {
         const mediaQuery = window.matchMedia(`(max-width: ${BREAK_POINt}px)`);
-        setIsMobile(()=>window.matchMedia(`(max-width: ${BREAK_POINt}px)`).matches);
+        setIsMobile(
+            () => window.matchMedia(`(max-width: ${BREAK_POINt}px)`).matches
+        );
         mediaQuery.addEventListener("change", (e) => setIsMobile(e.matches));
         return () =>
             mediaQuery.removeEventListener("change", (e) =>

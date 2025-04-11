@@ -4,8 +4,6 @@ import { RefObject, useEffect, useRef } from "react"
 
 const ChatContainer = ({ chats }: { chats: Array<any> }) => {
       const { userId } = useUserContext()
-
-      console.log(chats)
       const ref = useRef(undefined) as unknown as RefObject<HTMLDivElement>
       useEffect(() => {
             ref.current?.scrollIntoView({ behavior: "smooth" })
@@ -14,7 +12,7 @@ const ChatContainer = ({ chats }: { chats: Array<any> }) => {
             <section className='flex-1 max-md:pt-[8rem] flex flex-col scroll-hidden overflow-y-auto  p-4 gap-3'>
                   <div className="mt-auto">
                         {
-                              chats.map((chat, key) => {
+                              chats?.map((chat, key) => {
                                     return <ChatCard userId={userId} chat={chat} key={key + chat?.id} />
                               })
                         }

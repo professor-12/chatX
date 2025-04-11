@@ -21,7 +21,7 @@ const TabContainer = () => {
                         activeTab == "home" && !isMobile && <Chat />
                   }
                   {
-                        (activeTab == "home" && isMobile) && (selectedChat ?
+                        (activeTab == "home" && isMobile) && (selectedChat.id ?
                               <div className='py-4'>
                                     <ChatPage />
                               </div>
@@ -31,7 +31,7 @@ const TabContainer = () => {
                         activeTab == "contacts" && !isMobile && <ContactTab />
                   }
                   {
-                        (activeTab == "contacts" && isMobile) && (selectedChat ?
+                        (activeTab == "contacts" && isMobile) && (selectedChat.id ?
                               <div className='py-4'>
                                     <ChatPage />
                               </div>
