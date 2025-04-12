@@ -265,7 +265,7 @@ export const getContactProfile = async (id: string, isGroup?: boolean) => {
         return { data: null, error: "An error occured" };
     }
 };
-
+    
 export const getGroupProfile = async (id: string) => {
     await checkAuth();
     try {
