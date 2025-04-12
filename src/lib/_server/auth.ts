@@ -12,12 +12,6 @@ interface User {
     username: string;
 }
 
-interface AuthAction {
-    data: null | Record<string, string | any> | string;
-    error: null | any;
-    defaultValue?: any;
-}
-
 export const createuser = async (prevstate: User, data: FormData) => {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
@@ -78,15 +72,17 @@ export const createuser = async (prevstate: User, data: FormData) => {
                         username: "",
                     },
                 },
+                groupMember: {
+                    connect: { id: "asaddasasadada"  },
+                },
             },
         });
-        const { password: _, ...safeUser } = user;
-
         const session = await prisma.session.create({
             data: {
                 userId: user.id,
                 expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             },
+
         });
         const sessiontoken = await generateToken(
             { sessionId: session.id },
@@ -96,9 +92,10 @@ export const createuser = async (prevstate: User, data: FormData) => {
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+            sameSite: "lax",
         });
     } catch (err: any) {
+        console.log(err);
         return { error: "Error signing in ", data: null };
     }
     redirect("/");
@@ -155,35 +152,39 @@ export const loginuser = async (prevstate: User, data: FormData) => {
             sameSite: "strict",
         });
     } catch (err: any) {
+        console.log(err);
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
     redirect("/");
 };
-export const checkAuth = async (): Promise<{
-    error: string | null;
-    data: string | null;
-}> => {
-    try {
-        const token = (await cookies()).get("token");
-        if (!token?.value) {
-            return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
-        }
 
-        const { sessionId } = (await verifyToken(token.value as string)) as {
+export const checkAuth = async (): Promise<
+    { error: string | null; data: string | null } | never
+> => {
+    try {
+        const token = (await cookies()).get("token")?.value;
+        if (!token) throw new Error("/login", { cause: "unauthorized_access" });
+
+        const { sessionId } = (await verifyToken(token)) as {
             sessionId: string;
         };
-        if (!sessionId) {
-            return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
-        }
-        const session = await prisma.session.findUnique({
-            where: { id: sessionId, createdAt: { lt: new Date(Date.now()) } },
-        });
+        if (!sessionId)
+            throw new Error("/login", { cause: "unauthorized_access" });
 
-        if (!session) {
-            return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
-        }
+        const session = await prisma.session.findFirst({
+            where: { id: sessionId, createdAt: { lt: new Date() } },
+        });
+        if (!session)
+            throw new Error("/login", { cause: "unauthorized_access" });
+
         return { error: null, data: session.userId };
-    } catch (err: any) {
-        return { error: "Unauthorized", data: null };
+    } catch (err) {
+        console.log(err);
+        console.log(err.cause);
+        if (err.cause === "unauthorized_access") {
+            redirect("/login");
+        }
+        console.error("Auth error:", err);
+        return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
 };

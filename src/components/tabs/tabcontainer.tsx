@@ -6,17 +6,36 @@ import ProfileTab from './profile-tab'
 import SettingsTab from './settings-tab'
 import UsersTab from './users-tab'
 import { useTabContext } from '@/context/TabContext'
+import useMobile from '@/hooks/useMobile'
+import { useChatContext } from '@/context/ChatContext'
+import ChatPage from '../chats/ChatPage'
 
 
 const TabContainer = () => {
+      const isMobile = useMobile()
       const { activeTab } = useTabContext()
+      const { selectedChat } = useChatContext()
       return (
-            <div className='p-6 h-screen overflow-hidden'>
+            <div className={`${isMobile ? "p-4" : "p-6"} h-[100dvh] py-4 overflow-hidden`}>
                   {
-                        activeTab == "home" && <Chat />
+                        activeTab == "home" && !isMobile && <Chat />
                   }
                   {
-                        activeTab == "contacts" && <ContactTab />
+                        (activeTab == "home" && isMobile) && (selectedChat.id ?
+                              <div className='py-4'>
+                                    <ChatPage />
+                              </div>
+                              : <Chat />)
+                  }
+                  {
+                        activeTab == "contacts" && !isMobile && <ContactTab />
+                  }
+                  {
+                        (activeTab == "contacts" && isMobile) && (selectedChat.id ?
+                              <div className='py-4'>
+                                    <ChatPage />
+                              </div>
+                              : <ContactTab />)
                   }
                   {
                         activeTab == "profile" && <ProfileTab />

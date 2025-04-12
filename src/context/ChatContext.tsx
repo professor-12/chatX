@@ -1,15 +1,14 @@
 "use client"
 import useSocket from '@/hooks/useSocket'
 import { getChats, getMessages } from '@/lib/_server/api'
-import { checkAuth } from '@/lib/_server/auth'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useUserContext } from './user-context'
-import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
+import { useQuery, UseQueryResult } from '@tanstack/react-query'
 
 interface IContext {
-      selectedChat: null | string
-      setSelectedChat: React.Dispatch<React.SetStateAction<string | null>>
-      fetchChat: () => Promise<void>
+      selectedChat: { id: null | string, isGroup: boolean }
+      setSelectedChat: React.Dispatch<React.SetStateAction<{ id: string | null, isGroup: boolean }>>
+      fetchChat: (a: { id: string, isGroup: boolean }) => Promise<void>
       chats: Array<any>
       setChats: React.Dispatch<React.SetStateAction<never[]>>
       fetchingChat: boolean
@@ -39,21 +38,22 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
             queryKey: ["get-chat"]
       })
       const { socket } = useSocket()
-      const [selectedChat, setSelectedChat] = useState<null | string>(null)
+      const [selectedChat, setSelectedChat] = useState<{ id: null, isGroup: false }>({ id: null, isGroup: false }) as any
+      const { isGroup, id } = selectedChat
       const [chats, setChats] = useState([]) as any
       const { userId } = useUserContext()
       const [fetchingChat, setFetchingChat] = useState(true)
 
-      const fetchChat = async () => {
+      const fetchChat = async ({ id, isGroup = false }: { id: string, isGroup: boolean }) => {
             if (!selectedChat) return
-            const message = await getMessages(selectedChat)
+            setFetchingChat(true)
+            const message = await getMessages(id as string, isGroup)
             setChats(message.data as any)
             setFetchingChat(false)
       }
-
       useEffect(() => {
-            fetchChat()
-      }, [selectedChat])
+            fetchChat({ id, isGroup })
+      }, [isGroup, id])
       useEffect(() => {
             socket?.on("get-message", ({ senderId, message }) => {
                   if (senderId !== selectedChat) return
@@ -70,7 +70,7 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
                         })
                   })
             }
-      }, [socket, selectedChat])
+      }, [socket, id, selectedChat])
 
       return (
             <Context.Provider value={{ selectedChat, setSelectedChat, fetchChat, chats, setChats, fetchingChat, userId, lastChatQuery }}>{children}</Context.Provider>

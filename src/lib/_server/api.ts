@@ -4,13 +4,7 @@ import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
 
 export const getContact = async () => {
-    const { data, error } = await checkAuth();
-    if (error) {
-        return { data: null, error };
-    }
-    if (!data) {
-        return { data: null };
-    }
+    const { data } = await checkAuth();
     try {
         const userContacts = await prisma.contact.findMany({
             where: { userId: data },
@@ -23,13 +17,7 @@ export const getContact = async () => {
 };
 
 export const createContact = async (contactId: string) => {
-    const { data, error } = await checkAuth();
-    if (error) {
-        throw new Error(error);
-    }
-    if (!data) {
-        return { data: null };
-    }
+    const { data } = await checkAuth();
     try {
         const newContact = await prisma.contact.create({
             data: {
@@ -44,7 +32,7 @@ export const createContact = async (contactId: string) => {
 };
 
 export const allUser = async () => {
-    const { data, error } = await checkAuth();
+    const { data } = await checkAuth();
     if (!data) {
         return { error: null };
     }
@@ -63,13 +51,7 @@ export const allUser = async () => {
 };
 
 export const getContacts = async () => {
-    const { data, error } = await checkAuth();
-    if (error) {
-        return { error: "not authorized", data: null };
-    }
-    if (!data) {
-        return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
-    }
+    const { data } = await checkAuth();
     try {
         const contacts = await prisma.contact.findMany({
             where: {
@@ -87,13 +69,7 @@ export const createMessage = async (): Promise<{
     error: string | null;
     data: any;
 }> => {
-    const { data, error } = await checkAuth();
-    if (error) {
-        return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
-    }
-    if (!data) {
-        return { error: ERROR_CONSTANT.NOT_AUTHORIZED, data: null };
-    }
+    const { data } = await checkAuth();
     try {
         const message = await prisma.message.create({
             data: {
@@ -109,12 +85,9 @@ export const createMessage = async (): Promise<{
 };
 
 export const getChats = async () => {
-    const { data, error } = await checkAuth();
-    if (!data) {
-        return { error };
-    }
+    const { data } = await checkAuth();
     try {
-        const recentChats = await prisma.message.findMany({
+        const directMessages = await prisma.message.findMany({
             distinct: ["senderId", "receiverId"],
             orderBy: {
                 createdAt: "desc",
@@ -125,7 +98,12 @@ export const getChats = async () => {
                         receiverId: data as string,
                     },
                     {
-                        senderId: data as string,
+                        AND: {
+                            senderId: data as string,
+                            NOT: {
+                                receiverId: null,
+                            },
+                        },
                     },
                 ],
             },
@@ -138,11 +116,40 @@ export const getChats = async () => {
                     omit: { password: true },
                     include: { profile: true },
                 },
+                group: true,
             },
+        });
+        const groupChat = await prisma.message.findMany({
+            where: {
+                group: {
+                    members: {
+                        some: {
+                            id: data as string,
+                        },
+                    },
+                },
+            },
+            include: {
+                group: { include: { members: {} } },
+            },
+            distinct: ["groupId"],
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+        const transformedGroupChat = groupChat.map((chat, index) => {
+            return {
+                id: chat.group.id,
+                name: chat.group.name,
+                avatar: chat.group.groupPics,
+                lastMessage: chat.message || "Sent an image",
+                time: chat.createdAt,
+                isGroup: true,
+            };
         });
 
         const seen = new Set();
-        const removeDuplicate = recentChats.filter(
+        const removeDuplicate = [...directMessages].filter(
             ({ senderId, receiverId }) => {
                 const pairKey = [senderId, receiverId].sort().join("-");
                 if (seen.has(pairKey)) return false;
@@ -150,19 +157,23 @@ export const getChats = async () => {
                 return true;
             }
         );
-        const __ = removeDuplicate.map((chat, index) => {
-            const isSender = (chat.senderId as string) === (data as string);
-            const contact = isSender ? chat.receiver : chat.sender;
 
-            return {
-                id: contact?.id || "group",
-                name: contact?.name || "Unknown",
-                avatar: contact?.profile?.profilePics || "/default-avatar.png",
-                lastMessage: chat?.message || "Sent an image",
-                time: chat.createdAt,
-            };
-        });
-
+        const __ = [
+            ...removeDuplicate.map((chat) => {
+                const isSender = (chat.senderId as string) === (data as string);
+                const contact = isSender ? chat.receiver : chat.sender;
+                return {
+                    id: contact?.id || "group",
+                    name: contact?.name || "Unknown",
+                    avatar:
+                        contact?.profile?.profilePics || "/default-avatar.png",
+                    lastMessage: chat?.message || "Sent an image",
+                    time: chat.createdAt,
+                    isGroup: false,
+                };
+            }),
+            ...transformedGroupChat,
+        ];
         return { data: __ };
     } catch (err) {
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
@@ -170,13 +181,9 @@ export const getChats = async () => {
 };
 
 export const addToContact = async (id: string) => {
-    const { data, error } = await checkAuth();
-
-    if (error) {
-        return { error, data };
-    }
+    const { data } = await checkAuth();
     try {
-        const usercontact = await prisma.contact.create({
+        await prisma.contact.create({
             data: {
                 contactId: id,
                 userId: data as string,
@@ -189,10 +196,7 @@ export const addToContact = async (id: string) => {
 };
 
 export async function checkcontact(id: string) {
-    const { data, error } = await checkAuth();
-    if (error) {
-        return { error };
-    }
+    const { data } = await checkAuth();
     try {
         const isContact = await prisma.contact.findFirst({
             where: {
@@ -206,26 +210,41 @@ export async function checkcontact(id: string) {
     }
 }
 
-export const getMessages = async (id: string) => {
-    const { data, error } = await checkAuth();
-    if (error) return { error };
-
+export const getMessages = async (id: string, isGroup?: boolean) => {
+    const { data } = await checkAuth();
+    let messages: any;
     try {
-        const messages = await prisma.message.findMany({
-            where: {
-                OR: [
-                    { receiverId: id, senderId: data as string },
-                    { senderId: id, receiverId: data as string },
-                ],
-            },
-        });
+        if (isGroup) {
+            messages = await prisma.message.findMany({
+                where: {
+                    groupId: id,
+                    group: {
+                        members: {
+                            some: { id: data },
+                        },
+                    },
+                },
+                include: { sender: { include: { profile: true } } },
+            });
+        } else {
+            messages = await prisma.message.findMany({
+                where: {
+                    OR: [
+                        { receiverId: data, senderId: id },
+                        { senderId: data, receiverId: id as string },
+                    ],
+                },
+                include: { sender: { include: { profile: true } } },
+            });
+        }
         return { data: messages, error: null };
     } catch (err) {
         return { error: "An error occured", data: null };
     }
 };
 
-export const getContactPRofile = async (id: string) => {
+export const getContactProfile = async (id: string, isGroup?: boolean) => {
+    await checkAuth();
     try {
         const profile = await prisma.profile.findFirst({
             where: {
@@ -247,10 +266,24 @@ export const getContactPRofile = async (id: string) => {
     }
 };
 
+export const getGroupProfile = async (id: string) => {
+    await checkAuth();
+    try {
+        const getGroupInfo = await prisma.group.findFirst({
+            where: { id },
+            omit: {},
+        });
+        const { name, groupPics } = getGroupInfo;
+
+        return {
+            data: { name, profilePics: groupPics, ...getGroupInfo },
+            error: null,
+        };
+    } catch (err) {}
+};
+
 export const getUserProfile = async () => {
     const { data, error } = await checkAuth();
-    if (error) return { error };
-
     try {
         const profile = await prisma.profile.findFirst({
             where: {
@@ -277,13 +310,14 @@ export const sendMessage = async ({
     receiverId,
     message,
     file,
+    groupId,
 }: {
-    receiverId: string;
+    receiverId?: string;
     message?: string;
     file?: string;
+    groupId?: string;
 }) => {
-    const { data, error } = await checkAuth();
-    if (error) return { error };
+    const { data } = await checkAuth();
     if (!message && !file) return;
     try {
         const _message = await prisma.message.create({
@@ -292,6 +326,7 @@ export const sendMessage = async ({
                 senderId: data as string,
                 message,
                 picture: file,
+                groupId,
             },
         });
         return { data: _message, error: null };
@@ -299,3 +334,24 @@ export const sendMessage = async ({
         return { data: null, error: "An error occured" };
     }
 };
+
+export const createGroupChat = async () => {
+    const { data: userId } = await checkAuth();
+    try {
+        const group = await prisma.group.create({
+            data: {
+                creatorId: userId as string,
+                name: "Global Chat",
+                members: {
+                    connect: [{ id: userId }],
+                },
+                createdAt: new Date(Date.now()),
+            },
+        });
+        return { data: group };
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const getHeaderDetail = async () => {};

@@ -17,8 +17,8 @@ app.prepare().then(() => {
     io.on("connection", (socket) => {
         socket.on("joined", (id) => {
             if (connectedUsers.has(id)) return;
+            console.log("A user joined");
             connectedUsers.set(id, socket.id);
-            console.log(connectedUsers);
         });
         socket.on("send-message", ({ senderId, receiverId, message }) => {
             const socketId = connectedUsers.get(receiverId);
@@ -41,7 +41,7 @@ app.prepare().then(() => {
         .once("error", (err: any) => {
             process.exit(1);
         })
-        .listen(port, () => {
+        .listen(port, "0.0.0.0", () => {
             console.log(`> Ready on http://0.0.0.0:${port}`);
         });
 });

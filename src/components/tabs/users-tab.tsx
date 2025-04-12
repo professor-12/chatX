@@ -81,9 +81,7 @@ export const UserCard = ({ contact }: { contact: any }) => {
                   </div>
             </div>
             {openModal &&
-                  <AddContactModal contact={contact} handleCloseModal={() => {
-                        setOpenModal(false);
-                  }
+                  <AddContactModal contact={contact} handleCloseModal={() => { setOpenModal(false); }
                   }></AddContactModal>
             }
       </Fragment>
@@ -96,7 +94,7 @@ export const AddContactModal = ({ handleCloseModal, contact }: { handleCloseModa
       const { data, error, isPending } = useQuery({ queryKey: ["check-contact", contact?.id], queryFn: () => checkcontact(contact?.id) })
       const { isPending: mutating, error: _error, mutate } = useMutation({ mutationFn: async () => { await addToContact(contact?.id); handleCloseModal() }, mutationKey: ["create-contact", contact?.id] })
 
-      return <BackDrop className='cursor-pointer' onClick={handleCloseModal}>
+      return <BackDrop className='cursor-pointer' onClick={isPending ? () => { } : handleCloseModal}>
             <div onClick={(e) => e.stopPropagation()} className='rounded-xl bg-white items-center shadow flex gap-4 flex-col cursor-default py-4 px-6 w-[12rem]  border-border border'>
                   {
                         isPending ?

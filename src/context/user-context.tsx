@@ -6,11 +6,10 @@ const Context = createContext<{ userId: string | null }>({ userId: null })
 
 const UserContext = ({ children }: { children: React.ReactNode }) => {
       const [userId, setUserId] = useState<null | string>(null)
-      const getUserId = useCallback(
-            async () => {
-                  const { data } = await checkAuth()
-                  setUserId(data as string)
-            }, [])
+      const getUserId = useCallback(async () => {
+            const { data } = await checkAuth()
+            setUserId(data as string)
+      }, [])
       useEffect(() => {
             getUserId()
       }, [])

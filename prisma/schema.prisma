@@ -10,11 +10,13 @@ datasource db {
   provider = "postgresql"
   url     = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+  
 }
+
 
 model User {
   id String @map("_id") @id @default(cuid())
-  name String  
+  name String
   email String @unique
   password String? 
   validated Boolean @default(false)
@@ -25,10 +27,26 @@ model User {
   messagesent Message[] @relation("sender")
   messagereceived Message[] @relation("receiver")
 
+  admin Group[] @relation(name: "admin")
+  groupMember Group[] @relation(name: "groupMember")
   Contacts Contact[] @relation(name: "userRelation")
   usercontact Contact[] @relation(name: "contactRelation")
+  groupCreatedBy Group[] @relation(name: "groupCreatedBy")
+  
 }
 
+model Group {
+  id String @map("_id") @id @default(cuid())  
+  name String
+  description String?
+  admin User[] @relation(name: "admin")
+  groupPics String? @default("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRony1PUEAFW_rKWuriSeChlMZK05SNCoyhblOQpH5tBq1m5C_HHsKEJvveSdHRdSj_zJ4&usqp=CAU")
+  message Message[] @relation(name: "groupMessage")
+  members User[] @relation(name: "groupMember")
+  creatorId String
+  creator User @relation(name: "groupCreatedBy", fields: [creatorId], references: [id])
+  createdAt DateTime
+}
 
 model Account {
   id String @map("_id") @id @default(cuid()) 
@@ -38,18 +56,15 @@ model Account {
   access_token String?
   userId String
   user User @relation(references: [id],fields: [userId])
-
+  
 }
-
 
 model Session {
   id String @map("_id") @id @default(cuid())
   userId      String 
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   expiresAt   DateTime
   createdAt   DateTime @default(now())
-
   @@index([userId]) 
 
 }
@@ -73,13 +88,15 @@ enum  Gender {
 model Message {
   id String @map("_id") @id @default(cuid())
   senderId String
-  receiverId String
+  receiverId String?
   picture String?
   message String?
   createdAt DateTime @default(now())
   editedAt DateTime?
   sender User @relation(fields: [senderId], references: [id],name: "sender")
-  receiver User @relation(fields: [receiverId], references: [id],name: "receiver")
+  receiver User? @relation(fields: [receiverId], references: [id],name: "receiver")
+  groupId String?
+  group Group? @relation(fields: [groupId], references: [id], name: "groupMessage")
 }
 
 model Contact {
