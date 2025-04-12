@@ -73,7 +73,7 @@ export const createuser = async (prevstate: User, data: FormData) => {
                     },
                 },
                 groupMember: {
-                    connect: { id: "asaddasasadada"  },
+                    connect: { id: "cm9dvfogr0000hovs9zp9sbs6" },
                 },
             },
         });
@@ -82,7 +82,6 @@ export const createuser = async (prevstate: User, data: FormData) => {
                 userId: user.id,
                 expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             },
-
         });
         const sessiontoken = await generateToken(
             { sessionId: session.id },
