@@ -9,6 +9,7 @@ import { useTabContext } from '@/context/TabContext'
 import useMobile from '@/hooks/useMobile'
 import { useChatContext } from '@/context/ChatContext'
 import ChatPage from '../chats/ChatPage'
+import GroupChat from './group-tab'
 
 
 const TabContainer = () => {
@@ -45,6 +46,9 @@ const TabContainer = () => {
                   }
                   {
                         activeTab == "users" && <UsersTab />
+                  }
+                  {
+                        activeTab == "group" && <GroupChat />
                   }
             </div>
       )

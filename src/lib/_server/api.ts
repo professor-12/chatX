@@ -1,7 +1,11 @@
 "use server";
+import { v2 as cloudinary } from "cloudinary";
 import { checkAuth } from "./auth";
 import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
+import { cloudinary_config, config } from "../cloudinary/cloudinary.config";
+
+cloudinary_config();
 
 export const getContact = async () => {
     const { data } = await checkAuth();
@@ -265,7 +269,7 @@ export const getContactProfile = async (id: string, isGroup?: boolean) => {
         return { data: null, error: "An error occured" };
     }
 };
-    
+
 export const getGroupProfile = async (id: string) => {
     await checkAuth();
     try {
@@ -335,7 +339,7 @@ export const sendMessage = async ({
     }
 };
 
-export const createGroupChat = async () => {
+export const createGroupChat = async ({ name, description, groupP }) => {
     const { data: userId } = await checkAuth();
     try {
         const group = await prisma.group.create({
@@ -355,3 +359,55 @@ export const createGroupChat = async () => {
 };
 
 export const getHeaderDetail = async () => {};
+
+export const createImageURL = async (image: string) => {
+    const cloudinaryUrl = "";
+    return `${cloudinaryUrl}/${image}`;
+};
+
+export const uploadImage = async (file: File) => {
+    await checkAuth();
+    try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "chatapp");
+        const response = await fetch(
+            `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+            {
+                method: "POST",
+                body: formData,
+            }
+        );
+        const data = await response.json();
+        return { data, error: null };
+    } catch (err) {
+        return { data: null, error: "An error occured" };
+    }
+};
+
+export const handleFileUpload = async (file: string) => {
+    return (await cloudinary.uploader.upload(file)).secure_url;
+};
+
+export const createGroup = async ({
+    name,
+    groupPics,
+    description,
+    members,
+}) => {
+    const { data: userId } = await checkAuth();
+    try {
+        await prisma.group.create({
+            data: {
+                name,
+                groupPics,
+                description,
+                creatorId: userId,
+                createdAt: new Date(Date.now()),
+            },
+        });
+        return { data: "Group created successfully" };
+    } catch (err) {
+        return { error: err };
+    }
+};
