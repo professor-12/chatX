@@ -1,9 +1,11 @@
 "use server";
-import { v2 as cloudinary } from "cloudinary";
 import { checkAuth } from "./auth";
 import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
-import { cloudinary_config, config } from "../cloudinary/cloudinary.config";
+import {
+    cloudinary_config,
+    d as cloudinary,
+} from "../cloudinary/cloudinary.config";
 
 cloudinary_config();
 
@@ -40,7 +42,7 @@ export const allUser = async () => {
     if (!data) {
         return { error: null };
     }
-    const __ = await prisma.user.findMany({
+    const transformedInbox = await prisma.user.findMany({
         where: {
             NOT: {
                 id: data,
@@ -51,7 +53,7 @@ export const allUser = async () => {
         orderBy: { createdAt: "desc" },
     });
 
-    return { data: __ };
+    return { data: transformedInbox };
 };
 
 export const getContacts = async () => {
@@ -141,12 +143,31 @@ export const getChats = async () => {
                 createdAt: "desc",
             },
         });
-        const transformedGroupChat = groupChat.map((chat, index) => {
+
+        const test = await prisma.group.findMany({
+            where: {
+                members: {
+                    some: {
+                        id: data as string,
+                    },
+                },
+            },
+            include: {
+                message: true,
+            },
+            distinct: ["id"],
+        });
+
+        // console.log(test);
+
+        const transformedGroupChat = test.map((chat, index) => {
             return {
-                id: chat.group.id,
-                name: chat.group.name,
-                avatar: chat.group.groupPics,
-                lastMessage: chat.message || "Sent an image",
+                id: chat.id,
+                name: chat.name,
+                avatar: chat.groupPics,
+                lastMessage:
+                    chat.message[chat.message.length - 1]?.message ||
+                    "Group Created",
                 time: chat.createdAt,
                 isGroup: true,
             };
@@ -162,7 +183,7 @@ export const getChats = async () => {
             }
         );
 
-        const __ = [
+        const transformedInbox = [
             ...removeDuplicate.map((chat) => {
                 const isSender = (chat.senderId as string) === (data as string);
                 const contact = isSender ? chat.receiver : chat.sender;
@@ -178,7 +199,7 @@ export const getChats = async () => {
             }),
             ...transformedGroupChat,
         ];
-        return { data: __ };
+        return { data: transformedInbox };
     } catch (err) {
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
@@ -393,21 +414,30 @@ export const createGroup = async ({
     name,
     groupPics,
     description,
-    members,
+    members = [],
 }) => {
     const { data: userId } = await checkAuth();
     try {
-        await prisma.group.create({
+        const pics = await handleFileUpload(groupPics);
+        const group = await prisma.group.create({
             data: {
                 name,
-                groupPics,
+                groupPics: pics,
                 description,
                 creatorId: userId,
                 createdAt: new Date(Date.now()),
+                admin: {
+                    connect: [{ id: userId }],
+                },
+                members: {
+                    connect: [...members, { id: userId }],
+                },
             },
         });
-        return { data: "Group created successfully" };
+
+        return group.id;
     } catch (err) {
+        console.log(err);
         return { error: err };
     }
 };

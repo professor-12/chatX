@@ -5,10 +5,20 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import Image from 'next/image'
 import { useMutation } from '@tanstack/react-query'
-import { createGroup, handleFileUpload } from '@/lib/_server/api'
+import { createGroup } from '@/lib/_server/api'
+import { useChatContext } from '@/context/ChatContext'
+import useToggle from '@/hooks/useToggle'
+import BackDrop from '../ui/back-drop'
+import SelectMembers from '../SelectMembers'
+
 
 const GroupChat = () => {
-      const { mutate: _createGroup, isPending } = useMutation({ mutationFn: createGroup, mutationKey: ['create-group'] })
+      const { lastChatQuery } = useChatContext()
+      const { mutate: _createGroup, isPending } = useMutation({ mutationFn: createGroup, mutationKey: ['create-group'], onSuccess: handleOnSucess, onError: (errpr) => { console.log("Error") } })
+      const { setSelectedChat } = useChatContext()
+      const [isOpened, onclick] = useToggle()
+      const [addMembers, setaddMembers] = useState<Array<{ id: string }>>([])
+
       const fileRef = useRef<HTMLInputElement>(null)
       const [groupName, setGroupName] = useState("")
       const [fileString, setFileString] = useState("")
@@ -30,13 +40,18 @@ const GroupChat = () => {
             if (e.target.files.length == 0) return
             const stringFile = await convertFileToString(e.target.files[0])
             setFileString(stringFile as string)
-            console.log(stringFile)
+
             return stringFile
       }
 
+      function handleOnSucess(data: any) {
+            setSelectedChat(() => ({ id: data, isGroup: true }))
+            lastChatQuery.refetch()
+            changeActiveTab("home")
+      }
       const handleSubmit = (e: React.FormEvent) => {
             e.preventDefault()
-            _createGroup({ name: groupName, description: "", groupPics: fileString as string, members: [] })
+            _createGroup({ name: groupName, description: "", groupPics: fileString as string, members: addMembers })
       }
       return (
             <form onSubmit={handleSubmit}>
@@ -59,8 +74,18 @@ const GroupChat = () => {
                               </div>
                         </div>
                   </div>
-                  <hr className='h-px my-4 w-full bg-slate-200 ' />
-                  <Button disabled={isPending || (groupName.trim().length == 0) || !fileString} className='w-full'>Create group</Button>
+                  {
+                        isOpened &&
+                        (<BackDrop onClick={onclick} className='bg-slate-900/30 cursor-pointer'>
+                              <SelectMembers cancel={() => onclick()} addMembers={addMembers} setaddMembers={setaddMembers} />
+                        </BackDrop>)
+                  }
+                  <hr className='h-px my-4 w-full bg-slate-200' />
+                  <div className="space-y-4">
+
+                        <Button type='button' onClick={onclick} variant='ghost' className='w-full'>Add members {"(" + addMembers.length + ")"}</Button>
+                        <Button disabled={isPending || (groupName.trim().length == 0) || !fileString || addMembers.length == 0} className='w-full'>Create group</Button>
+                  </div>
             </form>
       )
 }

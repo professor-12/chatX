@@ -30,7 +30,7 @@ export default ChatContainer
 const ChatCard = ({ chat, userId }: { chat: any, userId: string | null }) => {
       const { sender } = chat
       const { selectedChat: { isGroup } } = useChatContext()
-      console.log(sender)
+
       const isRight = (userId == (chat?.senderId) || !chat?.senderId)
       return <div className={`py-1 w-full  flex ${isRight && "justify-end"}`}>
             <div className={isRight ? "text-right" : ""}>
