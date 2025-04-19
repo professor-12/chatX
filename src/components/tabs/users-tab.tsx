@@ -13,7 +13,7 @@ const UsersTab = () => {
       return (
             <div className='h-screen flex flex-col'>
                   {/* <div>Add to Contacts</div> */}
-                  <div className='px-6'><input type="text" className='bg-card outline-none focus:outline-none border border-border w-full p-1 px-3' placeholder='Search..' /></div>
+                  <div className='px-6 '><input type="text" className='bg-card outline-none focus:outline-none border border-border w-full p-1 px-3' placeholder='Search..' /></div>
                   <div className='space-y-2 flex-1  scroll-hidden py-12 pt-6  overflow-y-auto'>
                         {
                               isPending ?
@@ -41,7 +41,7 @@ const UsersTab = () => {
                                           </svg>
                                     </div>
                                     :
-                                    <div className=''>
+                                    <div className='max-md:pb-12'>
                                           {
                                                 data?.data?.length == 0 ? <p className='text-center text-lg'>No Users found yet</p> :
                                                       data?.data?.map((_data, index) => {
@@ -94,7 +94,7 @@ export const AddContactModal = ({ handleCloseModal, contact }: { handleCloseModa
       const { data, error, isPending } = useQuery({ queryKey: ["check-contact", contact?.id], queryFn: () => checkcontact(contact?.id) })
       const { isPending: mutating, error: _error, mutate } = useMutation({ mutationFn: async () => { await addToContact(contact?.id); handleCloseModal() }, mutationKey: ["create-contact", contact?.id] })
 
-      return <BackDrop className='cursor-pointer' onClick={isPending ? () => { } : handleCloseModal}>
+      return <BackDrop className='cursor-pointer' onClick={mutating ? () => { } : handleCloseModal}>
             <div onClick={(e) => e.stopPropagation()} className='rounded-xl bg-white items-center shadow flex gap-4 flex-col cursor-default py-4 px-6 w-[12rem]  border-border border'>
                   {
                         isPending ?

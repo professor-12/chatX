@@ -91,119 +91,85 @@ export const createMessage = async (): Promise<{
 };
 
 export const getChats = async () => {
-    const { data } = await checkAuth();
+    const { data: userId } = await checkAuth();
+
     try {
+        // Fetch recent direct messages
         const directMessages = await prisma.message.findMany({
-            distinct: ["senderId", "receiverId"],
-            orderBy: {
-                createdAt: "desc",
-            },
             where: {
                 OR: [
+                    { receiverId: userId },
                     {
-                        receiverId: data as string,
-                    },
-                    {
-                        AND: {
-                            senderId: data as string,
-                            NOT: {
-                                receiverId: null,
-                            },
-                        },
+                        senderId: userId,
+                        NOT: { receiverId: null },
                     },
                 ],
             },
+            orderBy: { createdAt: "desc" },
             include: {
-                sender: {
-                    omit: { password: true },
-                    include: { profile: true },
-                },
-                receiver: {
-                    omit: { password: true },
-                    include: { profile: true },
-                },
-                group: true,
+                sender: { include: { profile: true } },
+                receiver: { include: { profile: true } },
             },
         });
-        const groupChat = await prisma.message.findMany({
+
+        // Fetch groups the user is part of
+        const groupChats = await prisma.group.findMany({
             where: {
-                group: {
-                    members: {
-                        some: {
-                            id: data as string,
-                        },
-                    },
-                },
+                members: { some: { id: userId } },
             },
             include: {
-                group: { include: { members: {} } },
-            },
-            distinct: ["groupId"],
-            orderBy: {
-                createdAt: "desc",
-            },
-        });
-
-        const test = await prisma.group.findMany({
-            where: {
-                members: {
-                    some: {
-                        id: data as string,
-                    },
+                message: {
+                    orderBy: { createdAt: "desc" },
+                    take: 1, // Just fetch the latest message
                 },
             },
-            include: {
-                message: true,
-            },
-            distinct: ["id"],
+            orderBy: { createdAt: "desc" },
         });
 
-        // console.log(test);
+        const transformedGroupChat = groupChats.map((chat) => ({
+            id: chat.id,
+            name: chat.name,
+            avatar: chat.groupPics,
+            lastMessage: chat.message[0]?.message || "Group Created",
+            time: chat.message[0]?.createdAt || chat.createdAt,
+            isGroup: true,
+        }));
 
-        const transformedGroupChat = test.map((chat, index) => {
-            return {
-                id: chat.id,
-                name: chat.name,
-                avatar: chat.groupPics,
-                lastMessage:
-                    chat.message[chat.message.length - 1]?.message ||
-                    "Group Created",
-                time: chat.createdAt,
-                isGroup: true,
-            };
-        });
-
+        // Remove duplicates (unique sender-receiver pairs)
         const seen = new Set();
-        const removeDuplicate = [...directMessages].filter(
+        const uniqueDirectMessages = directMessages.filter(
             ({ senderId, receiverId }) => {
-                const pairKey = [senderId, receiverId].sort().join("-");
-                if (seen.has(pairKey)) return false;
-                seen.add(pairKey);
+                const key = [senderId, receiverId].sort().join("-");
+                if (seen.has(key)) return false;
+                seen.add(key);
                 return true;
             }
         );
 
-        const transformedInbox = [
-            ...removeDuplicate.map((chat) => {
-                const isSender = (chat.senderId as string) === (data as string);
-                const contact = isSender ? chat.receiver : chat.sender;
-                return {
-                    id: contact?.id || "group",
-                    name: contact?.name || "Unknown",
-                    avatar:
-                        contact?.profile?.profilePics || "/default-avatar.png",
-                    lastMessage: chat?.message || "Sent an image",
-                    time: chat.createdAt,
-                    isGroup: false,
-                };
-            }),
-            ...transformedGroupChat,
-        ];
-        return { data: transformedInbox };
+        const transformedInbox = uniqueDirectMessages.map((msg) => {
+            const isSender = msg.senderId === userId;
+            const contact = isSender ? msg.receiver : msg.sender;
+
+            return {
+                id: contact?.id || "unknown",
+                name: contact?.name || "Unknown",
+                avatar: contact?.profile?.profilePics || "/default-avatar.png",
+                lastMessage: msg.message || "Sent an image",
+                time: msg.createdAt,
+                isGroup: false,
+            };
+        });
+
+        const combined = [...transformedInbox, ...transformedGroupChat].sort(
+            (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
+        );
+
+        return { data: combined };
     } catch (err) {
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
 };
+
 
 export const addToContact = async (id: string) => {
     const { data } = await checkAuth();
@@ -304,7 +270,10 @@ export const getGroupProfile = async (id: string) => {
             data: { name, profilePics: groupPics, ...getGroupInfo },
             error: null,
         };
-    } catch (err) {}
+    } catch (err) {
+        console.log(err);
+        return { data: null, error: "An error occured" };
+    }
 };
 
 export const getUserProfile = async () => {
@@ -379,7 +348,6 @@ export const createGroupChat = async ({ name, description, groupP }) => {
     }
 };
 
-export const getHeaderDetail = async () => {};
 
 export const createImageURL = async (image: string) => {
     const cloudinaryUrl = "";
