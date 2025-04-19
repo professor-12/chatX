@@ -22,6 +22,4 @@ ReactSkeleton.Reactangle = (props: SkeletonProps) => {
 }
 
 
-
-
 export default ReactSkeleton
