@@ -7,7 +7,6 @@
         "module": "CommonJS",
         "outDir": "./dist",
         "moduleResolution": "Node",
-
         "isolatedModules": false
     },
     "include": ["server.mts"]
