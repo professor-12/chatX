@@ -10,6 +10,7 @@ const app = next({ dev, hostname, port: port as number });
 const handler = app.getRequestHandler();
 
 const connectedUsers = new Map();
+
 app.prepare().then(() => {
     const httpServer = createServer(handler) as any;
     const io = new Server(httpServer);

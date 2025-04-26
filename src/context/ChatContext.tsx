@@ -56,7 +56,7 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
       }, [isGroup, id])
       useEffect(() => {
             socket?.on("get-message", ({ senderId, message }) => {
-                  if (senderId !== selectedChat) return
+                  if (senderId !== selectedChat.id) return
                   setChats((prev: any) => {
                         return [...prev, message]
                   })

@@ -1,9 +1,11 @@
 "use client"
 import ChatPage from '@/components/chats/ChatPage'
 import { useChatContext } from '@/context/ChatContext'
+import useServiceWorker from '@/hooks/use-service-worker'
 import React from 'react'
 
 const HomePage = () => {
+      useServiceWorker()
       const { selectedChat } = useChatContext()
       return (
             !!!selectedChat.id ?
