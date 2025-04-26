@@ -1,3 +1,4 @@
+"use server";
 import webPush from "web-push";
 
 const mail = "test@test.com",
@@ -22,11 +23,3 @@ export const sendNotification = async (
         console.error("Error sending notification:", error);
     }
 };
-
-export default webPush;
-
-// Public Key:
-// BDVz71iYIlhp9nVk3D8f-hS_Wa-I_dpqPJFQdxOYc61j1BfZ_M8CG2qywv-hNOBGMgYojTLMNoJr-x7NCZPCM-M
-
-// Private Key:
-// dqbS2fO1ZMuNzEWH2RCaFJZZnbiFTW1zfRc1ANsbVkQ

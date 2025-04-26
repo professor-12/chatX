@@ -322,8 +322,14 @@ export const sendMessage = async ({
                 picture: file,
                 groupId,
             },
+            include: {
+                sender: { omit: { password: true, id: false, email: false } },
+            },
         });
-        sendNotificationToUser(receiverId as string);
+        sendNotificationToUser(receiverId as string, {
+            senderName: _message.sender.name as string,
+            message : _message.message,
+        });
         return { data: _message, error: null };
     } catch (err) {
         return { data: null, error: "An error occured" };
@@ -410,7 +416,10 @@ export const createGroup = async ({
     }
 };
 
-export const sendNotificationToUser = async (userId: string) => {
+export const sendNotificationToUser = async (
+    userId: string,
+    { senderName, message }: Record<string, string>
+) => {
     try {
         const subscription = await prisma.subscription.findFirst({
             where: { userId },
@@ -423,8 +432,8 @@ export const sendNotificationToUser = async (userId: string) => {
         await sendNotification(
             JSON.parse(subscription.value),
             JSON.stringify({
-                title: "Message from ChatApp",
-                body: "You have a new message",
+                title: `Message from ${senderName ?? "Chat App"}`,
+                body: message ?? "You have a new message",
                 icon: "i-ico.png",
                 image: "i-ico.png",
             })
