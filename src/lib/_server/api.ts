@@ -323,7 +323,7 @@ export const sendMessage = async ({
                 groupId,
             },
         });
-        await sendNotificationToUser(receiverId as string);
+        sendNotificationToUser(receiverId as string);
         return { data: _message, error: null };
     } catch (err) {
         return { data: null, error: "An error occured" };

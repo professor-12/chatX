@@ -72,6 +72,8 @@ const useServiceWorker = () => {
             registerServiceWorker();
         }
     }, []);
+
+    return null;
 };
 
 export default useServiceWorker;
