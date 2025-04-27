@@ -9,5 +9,5 @@
         "moduleResolution": "Node",
         "isolatedModules": false
     },
-    "include": ["server.mts", "notification/**/*.ts"]
+    "include": ["server.mts"]
 }

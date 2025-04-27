@@ -328,7 +328,7 @@ export const sendMessage = async ({
         });
         sendNotificationToUser(receiverId as string, {
             senderName: _message.sender.name as string,
-            message : _message.message,
+            message: _message.message,
         });
         return { data: _message, error: null };
     } catch (err) {
