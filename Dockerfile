@@ -9,7 +9,7 @@ RUN apk add --no-cache openssl
 
 # Install dependencies
 COPY package.json ./
-RUN npm install --frozen-lockfile 
+RUN npm install
 
 # Copy the rest of the app
 COPY . .
