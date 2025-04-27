@@ -6,7 +6,6 @@ export const POST = async (req: Request) => {
     const { subscription: _sub } = await req.json();
     const { data } = await checkAuth();
     try {
-
         const subscription = await prisma.subscription.findFirst({
             where: { value: JSON.stringify(_sub), userId: data as string },
         });
@@ -15,14 +14,17 @@ export const POST = async (req: Request) => {
             console.log("Already Subsctibed");
             return NextResponse.json({ message: "Already subscribed" });
         }
+
+        console.log("Please...")
         
         await prisma.subscription.create({
             data: { value: JSON.stringify(_sub), userId: data as string },
         });
-    } catch (error) {
+    }
+    catch (error) {
         console.log("Error in subscription", error);
         return NextResponse.json({ message: "Error in subscription" });
     }
-    console.log("Subscription created");
-    return NextResponse.json({ message: "Subscription received" });
+    
+   
 };
