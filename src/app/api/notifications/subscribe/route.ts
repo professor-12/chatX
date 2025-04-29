@@ -7,24 +7,32 @@ export const POST = async (req: Request) => {
     const { data } = await checkAuth();
     try {
         const subscription = await prisma.subscription.findFirst({
-            where: { value: JSON.stringify(_sub), userId: data as string },
+            where: {
+                AND: {
+                    userId: data,
+                    value: JSON.stringify(_sub),
+                },
+            },
         });
-        
+
+        console.log("Subscription", subscription);
+
         if (subscription) {
             console.log("Already Subsctibed");
             return NextResponse.json({ message: "Already subscribed" });
         }
 
-        console.log("Please...")
-        
+        console.log("Please...");
+
         await prisma.subscription.create({
-            data: { value: JSON.stringify(_sub), userId: data as string },
+            data: {
+                value: JSON.stringify(_sub),
+                userId: data,
+            },
         });
-    }
-    catch (error) {
+        return NextResponse.json({ message: "Subscribed" });
+    } catch (error) {
         console.log("Error in subscription", error);
         return NextResponse.json({ message: "Error in subscription" });
     }
-    
-   
 };

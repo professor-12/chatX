@@ -24,7 +24,7 @@ model User {
   accounts Account[]
   profile Profile?
   sessions Session[]
-  subscriptions Subscription?
+  subscriptions Subscription[]
   messagesent Message[] @relation("sender")
   messagereceived Message[] @relation("receiver")
 

@@ -21,7 +21,7 @@ app.prepare().then(() => {
             console.log("A user joined");
             connectedUsers.set(id, socket.id);
         });
-        socket.on("send-message", ({ senderId, receiverId, message }) => {
+        socket.on("send-messhjage", ({ senderId, receiverId, message }) => {
             const socketId = connectedUsers.get(receiverId);
             if (!socketId) return;
             io.to(socketId).emit("get-message", { senderId, message });
