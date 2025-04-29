@@ -7,23 +7,17 @@ function urlBase64ToUint8Array(base64String: string) {
         .replace(/-/g, "+")
         .replace(/_/g, "/");
     const rawData = atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-
-    return outputArray;
+    return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
 }
 
 const useServiceWorker = () => {
     useEffect(() => {
-        let subscription: PushSubscription;
         const registerServiceWorker = async () => {
-            if (!("serviceWorker" in navigator)) {
-                console.error("Service Worker not supported in this browser.");
+            if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+                console.error("Push notifications not supported.");
                 return;
             }
+
             try {
                 const vapidKey =
                     "BDVz71iYIlhp9nVk3D8f-hS_Wa-I_dpqPJFQdxOYc61j1BfZ_M8CG2qywv-hNOBGMgYojTLMNoJr-x7NCZPCM-M";
@@ -35,42 +29,50 @@ const useServiceWorker = () => {
                     }
                 );
 
-                const isSubscribed =
+                const existingSub =
                     await registration.pushManager.getSubscription();
-
-                if (isSubscribed) {
-                    console.log("Already subscribed:", isSubscribed);
-                    subscription = isSubscribed;
-                } else {
-                    subscription = await registration.pushManager.subscribe({
+                const subscription =
+                    existingSub ||
+                    (await registration.pushManager.subscribe({
                         userVisibleOnly: true,
                         applicationServerKey: urlBase64ToUint8Array(vapidKey),
-                    });
-                }
+                    }));
+
+                const body = JSON.stringify(subscription.toJSON());
+
                 const response = await fetch("/api/notifications/subscribe", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ subscription }),
+                    body,
                 });
-                console.log("Subscription sent to server:", response);
+
+                if (!response.ok)
+                    throw new Error("Failed to save subscription on server.");
+                console.log("Subscription successful:", subscription);
             } catch (error) {
-                console.error("Service Worker registration failed:", error);
+                console.error("Push registration failed:", error);
             }
         };
 
-        if (Notification.permission === "default") {
-            Notification.requestPermission().then((perm) => {
-                if (Notification.permission === "granted") {
-                    registerServiceWorker().catch((err) => console.log(err));
-                } else {
-                    alert("Please allow notifications.");
-                }
-            });
-        } else if (Notification.permission == "granted") {
-            registerServiceWorker();
-        }
+        const requestPermissionAndRegister = () => {
+            if (Notification.permission === "default") {
+                Notification.requestPermission().then((perm) => {
+                    if (perm === "granted") {
+                        registerServiceWorker();
+                    } else {
+                        alert(
+                            "Notification permission is required for push messages."
+                        );
+                    }
+                });
+            } else if (Notification.permission === "granted") {
+                registerServiceWorker();
+            }
+        };
+
+        requestPermissionAndRegister();
     }, []);
 
     return null;
