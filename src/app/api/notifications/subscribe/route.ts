@@ -15,8 +15,6 @@ export const POST = async (req: Request) => {
             },
         });
 
-        console.log("Subscription", subscription);
-
         if (subscription) {
             console.log("Already Subsctibed");
             return NextResponse.json({ message: "Already subscribed" });

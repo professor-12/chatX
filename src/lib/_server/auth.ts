@@ -178,8 +178,6 @@ export const checkAuth = async (): Promise<
 
         return { error: null, data: session.userId };
     } catch (err) {
-        console.log(err);
-        console.log(err.cause);
         if (err.cause === "unauthorized_access") {
             redirect("/login");
         }
