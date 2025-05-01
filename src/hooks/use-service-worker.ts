@@ -1,4 +1,5 @@
 "use client";
+import { checkAuth } from "@/lib/_server/auth";
 import { useEffect } from "react";
 
 function urlBase64ToUint8Array(base64String: string) {
@@ -37,8 +38,11 @@ const useServiceWorker = () => {
                         userVisibleOnly: true,
                         applicationServerKey: urlBase64ToUint8Array(vapidKey),
                     }));
-
-                const body = JSON.stringify(subscription.toJSON());
+                const {data} = await checkAuth();
+                const body = JSON.stringify({
+                    subscription: subscription.toJSON(),
+                    userId:data,
+                });
 
                 const response = await fetch("/api/notifications/subscribe", {
                     method: "POST",
