@@ -296,6 +296,7 @@ export const getUserProfile = async () => {
             },
         };
     } catch (err) {
+        console.log(err);
         return { data: null, error: "An error occured" };
     }
 };

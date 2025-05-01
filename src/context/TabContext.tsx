@@ -17,8 +17,6 @@ const TabComponent: FC<{ children: ReactNode }> = ({ children }) => {
       const [activeTab, setActiveTab] = useState<null | string | number>("home")
       const changeActiveTab = useCallback((tab: null | string | number) => {
             setActiveTab(tab)
-            localStorage.setItem("tab", "" + tab)
-
       }, [])
       useEffect(() => {
             const tab = localStorage.getItem("tab")
