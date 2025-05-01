@@ -89,8 +89,8 @@ enum  Gender {
 
 model Subscription {
   id String @id @default(cuid())
-  value String
-  userId String @unique
+  value String @unique
+  userId String 
   user User @relation(fields: [userId], references: [id])
 }
 
