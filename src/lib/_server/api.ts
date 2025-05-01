@@ -425,7 +425,7 @@ export const sendNotificationToUser = async (
             where: { userId: userId },
         });
 
-        console.log(subscription)
+        console.log(subscription);
 
         if (!subscription) {
             console.log("No subscription found");
