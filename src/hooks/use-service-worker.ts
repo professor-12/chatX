@@ -77,8 +77,6 @@ const useServiceWorker = () => {
 
         requestPermissionAndRegister();
     }, []);
-
-    return null;
 };
 
 export default useServiceWorker;
