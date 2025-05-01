@@ -38,10 +38,9 @@ const useServiceWorker = () => {
                         userVisibleOnly: true,
                         applicationServerKey: urlBase64ToUint8Array(vapidKey),
                     }));
-                const {data} = await checkAuth();
+
                 const body = JSON.stringify({
                     subscription: subscription.toJSON(),
-                    userId:data,
                 });
 
                 const response = await fetch("/api/notifications/subscribe", {
