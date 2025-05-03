@@ -3,7 +3,7 @@ import SocketContext from '@/context/socket-context'
 import TabComponent from '@/context/TabContext'
 import UserContext from '@/context/user-context'
 import React, { FC, ReactNode } from 'react'
-import Component from './Component
+import Component from './Component'
 
 const Layout: FC<{ children: ReactNode }> = async (props) => {
      
