@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loginuser } from "@/lib/_server/auth";
 import clsx from "clsx";
-import { stat } from "fs";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useActionState, useEffect } from "react";
 
 interface ILoginFields {

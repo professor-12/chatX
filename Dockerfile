@@ -9,7 +9,7 @@ RUN apk add --no-cache openssl
 
 # Install dependencies
 COPY package.json ./
-RUN npm install --frozen-lockfile 
+RUN npm install
 
 # Copy the rest of the app
 COPY . .
@@ -19,7 +19,7 @@ RUN  npm run build:socket
 
 # Expose ports
 
-ARG DATABASE_URL ,  DIRECT_URL, JWT_SECRET, Password, NEXT_Public_Key, Private_Key, NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, NEXT_PUBLIC_CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_URL
+ARG DATABASE_URL , DIRECT_URL, JWT_SECRET, Password, NEXT_Public_Key, Private_Key, NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, NEXT_PUBLIC_CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_URL
 
 ENV DATABASE_URL=$DATABASE_URL
 ENV DIRECT_URL=$DIRECT_URL
@@ -35,7 +35,7 @@ ENV CLOUDINARY_URL=$CLOUDINARY_URL
 EXPOSE 1000
 
 # Set environment variables
-ENV NODE_ENV production
+ENV NODE_ENV="production"
 
 # Start both servers
 # You can use a simple shell script or `concurrently`, but let's keep it simple here

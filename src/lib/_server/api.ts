@@ -296,6 +296,7 @@ export const getUserProfile = async () => {
             },
         };
     } catch (err) {
+        console.log(err);
         return { data: null, error: "An error occured" };
     }
 };
@@ -422,8 +423,10 @@ export const sendNotificationToUser = async (
 ) => {
     try {
         const subscription = await prisma.subscription.findFirst({
-            where: { userId },
+            where: { userId: userId },
         });
+
+        console.log(subscription);
 
         if (!subscription) {
             console.log("No subscription found");
@@ -435,7 +438,6 @@ export const sendNotificationToUser = async (
                 title: `Message from ${senderName ?? "Chat App"}`,
                 body: message ?? "You have a new message",
                 icon: "i-ico.png",
-                image: "i-ico.png",
             })
         );
     } catch (err) {
