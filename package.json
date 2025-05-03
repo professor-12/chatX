@@ -6,7 +6,7 @@
         "dev": "next dev",
         "build": "next build",
         "dev:socket": "NODE_OPTIONS='--loader ts-node/esm --trace-warnings --no-warnings' ts-node ./server.mts",
-        "build:socket": "next build && tsc --project tsconfig.server.json",
+        "build:socket": "next build && tsc --project tsconfig.server.json && npx prisma db push",
         "start:socket": "NODE_ENV=production node dist/server.mjs",
         "start": "next start",
         "lint": "next lint",
