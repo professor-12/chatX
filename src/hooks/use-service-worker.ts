@@ -1,20 +1,20 @@
 "use client";
 import { useEffect } from "react";
 
-function urlBase64ToUint8Array(base64String: string) {
-    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-        .replace(/-/g, "+")
-        .replace(/_/g, "/");
-    const rawData = atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
+// function urlBase64ToUint8Array(base64String: string) {
+//     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+//     const base64 = (base64String + padding)
+//         .replace(/-/g, "+")
+//         .replace(/_/g, "/");
+//     const rawData = atob(base64);
+//     const outputArray = new Uint8Array(rawData.length);
 
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
+//     for (let i = 0; i < rawData.length; ++i) {
+//         outputArray[i] = rawData.charCodeAt(i);
+//     }
 
-    return outputArray;
-}
+//     return outputArray;
+// }
 
 const useServiceWorker = () => {
     useEffect(() => {
@@ -26,7 +26,7 @@ const useServiceWorker = () => {
             }
             try {
                 const vapidKey =
-                    "BDVz71iYIlhp9nVk3D8f-hS_Wa-I_dpqPJFQdxOYc61j1BfZ_M8CG2qywv-hNOBGMgYojTLMNoJr-x7NCZPCM-M";
+                    "BJtLQUsDQKtwOd68YpmvEbkLgktZttaLuV9PPKNzslKpcYMCRzLvbnm0KUHg3jf1avhjsX2kSgRyCy7LQz8Fma0";
 
                 const registration = await navigator.serviceWorker.register(
                     "/sw.js",
@@ -39,14 +39,14 @@ const useServiceWorker = () => {
                     await registration.pushManager.getSubscription();
 
                 if (isSubscribed) {
+                    isSubscribed.unsubscribe();
                     console.log("Already subscribed:", isSubscribed);
-                    subscription = isSubscribed;
-                } else {
-                    subscription = await registration.pushManager.subscribe({
-                        userVisibleOnly: true,
-                        applicationServerKey: urlBase64ToUint8Array(vapidKey),
-                    });
+                    // subscription = isSubscribed;
                 }
+                subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: vapidKey,
+                });
                 const response = await fetch("/api/notifications/subscribe", {
                     method: "POST",
                     headers: {
@@ -54,7 +54,6 @@ const useServiceWorker = () => {
                     },
                     body: JSON.stringify({ subscription }),
                 });
-                console.log("Subscription sent to server:", response);
             } catch (error) {
                 console.error("Service Worker registration failed:", error);
             }

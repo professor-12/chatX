@@ -3,8 +3,8 @@ import webPush from "web-push";
 
 const mail = "test@test.com",
     publicKey =
-        "BDVz71iYIlhp9nVk3D8f-hS_Wa-I_dpqPJFQdxOYc61j1BfZ_M8CG2qywv-hNOBGMgYojTLMNoJr-x7NCZPCM-M",
-    privateKey = "dqbS2fO1ZMuNzEWH2RCaFJZZnbiFTW1zfRc1ANsbVkQ";
+        "BJtLQUsDQKtwOd68YpmvEbkLgktZttaLuV9PPKNzslKpcYMCRzLvbnm0KUHg3jf1avhjsX2kSgRyCy7LQz8Fma0",
+    privateKey = "0lDZT8bFgvicFsfvDMaggaDDB8QdC98Yd0bWw-ZbjDQ";
 
 webPush.setVapidDetails("mailto:" + mail, publicKey, privateKey);
 
@@ -23,3 +23,9 @@ export const sendNotification = async (
         console.error("Error sending notification:", error);
     }
 };
+
+// Public Key:
+// BJtLQUsDQKtwOd68YpmvEbkLgktZttaLuV9PPKNzslKpcYMCRzLvbnm0KUHg3jf1avhjsX2kSgRyCy7LQz8Fma0
+
+// Private Key:
+// 0lDZT8bFgvicFsfvDMaggaDDB8QdC98Yd0bWw-ZbjDQ

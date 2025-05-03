@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "postgres"
   url     =  env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
   
@@ -24,7 +24,7 @@ model User {
   accounts Account[]
   profile Profile?
   sessions Session[]
-  subscriptions Subscription?
+  subscriptions Subscription[]
   messagesent Message[] @relation("sender")
   messagereceived Message[] @relation("receiver")
 
@@ -90,7 +90,7 @@ enum  Gender {
 model Subscription {
   id String @id @default(cuid())
   value String
-  userId String @unique
+  userId String
   user User @relation(fields: [userId], references: [id])
 }
 
