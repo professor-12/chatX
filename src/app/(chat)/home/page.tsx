@@ -5,7 +5,7 @@ import useServiceWorker from '@/hooks/use-service-worker'
 import React from 'react'
 
 const HomePage = () => {
-      useServiceWorker()
+      const a = useServiceWorker()
       const { selectedChat } = useChatContext()
       return (
             !!!selectedChat.id ?
