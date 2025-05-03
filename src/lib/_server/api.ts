@@ -6,7 +6,6 @@ import {
     cloudinary_config,
     d as cloudinary,
 } from "../cloudinary/cloudinary.config";
-import { sendNotification } from "@/notification";
 
 cloudinary_config();
 
@@ -326,10 +325,6 @@ export const sendMessage = async ({
                 sender: { omit: { password: true, id: false, email: false } },
             },
         });
-        sendNotificationToUser(receiverId as string, {
-            senderName: _message.sender.name as string,
-            message: _message.message,
-        });
         return { data: _message, error: null };
     } catch (err) {
         return { data: null, error: "An error occured" };
@@ -414,31 +409,4 @@ export const createGroup = async ({
         console.log(err);
         return { error: err };
     }
-};
-
-export const sendNotificationToUser = async (
-    userId: string,
-    { senderName, message }: Record<string, string>
-) => {
-    try {
-        const subscription = await prisma.subscription.findFirst({
-            where: { userId },
-        });
-
-        if (!subscription) {
-            console.log("No subscription found");
-            return { error: "No subscription found" };
-        }
-        await sendNotification(
-            JSON.parse(subscription.value),
-            JSON.stringify({
-                title: `Message from ${senderName ?? "Chat App"}`,
-                body: message ?? "You have a new message",
-                icon: "i-ico.png",
-                image: "i-ico.png",
-            })
-        );
-    } catch (err) {
-        console.log(err);
-    }
-};
+}
