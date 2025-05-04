@@ -15,6 +15,7 @@ const useServiceWorker = () => {
                     console.log("Permission denied");
                     return;
                 }
+                let subscription: PushSubscription;
 
                 if ("serviceWorker" in navigator) {
                     const handleServiceWorker = async () => {
@@ -24,15 +25,16 @@ const useServiceWorker = () => {
                         const existi =
                             await register.pushManager.getSubscription();
                         if (existi) {
-                            existi.unsubscribe();
+                            subscription = existi;
+                        } else {
+                            subscription = await register.pushManager.subscribe(
+                                {
+                                    userVisibleOnly: true,
+                                    applicationServerKey:
+                                        process.env.NEXT_PUBLIC_VAPID_KEY,
+                                }
+                            );
                         }
-                        const subscription =
-                            await register.pushManager.subscribe({
-                                userVisibleOnly: true,
-                                applicationServerKey:
-                                    process.env.NEXT_PUBLIC_VAPID_KEY,
-                            });
-
                         const res = await fetch("/api/notification/subscribe", {
                             method: "POST",
                             body: JSON.stringify({ subscription }),
@@ -44,7 +46,6 @@ const useServiceWorker = () => {
                         const data = await res.json();
                         console.log(data);
                     };
-
                     handleServiceWorker();
                 }
             })();
@@ -53,6 +54,5 @@ const useServiceWorker = () => {
         }
     }, []);
 };
-
 
 export default useServiceWorker;

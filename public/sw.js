@@ -1,18 +1,18 @@
-self.addEventListener("push", (event) => {
-    const data = event.data.json();
-    const title = data?.title;
-    const body = data?.body;
-    const icon = data?.icon;
-    const url = data?.data?.url;
 
-    const notificationOptions = {
-        body,
-      //   tag: "unique-tag", // Use a unique tag to prevent duplicate notifications
-        icon,
-      //   data: {
-      //       url: url, // Replace with the desired URL for redirecting user to the desired page
-      //   },
+self.addEventListener("push", function (event) {
+    const data = event.data?.json() || {};
+    const { title, body, icon } = data;
+
+    const options = {
+        body: body || "You have a new notification.",
+        icon: icon || "/i-ico.png",
     };
 
-    self.registration.showNotification(title, notificationOptions);
+    self.registration.showNotification(title || "Notification", options);
+});
+
+self.addEventListener("notificationclick", function (event) {
+    event.notification.close();
+    // You can customize this to open a specific URL
+    event.waitUntil(clients.openWindow("/"));
 });

@@ -45,7 +45,7 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
       const [fetchingChat, setFetchingChat] = useState(true)
 
       const fetchChat = async ({ id, isGroup = false }: { id: string, isGroup: boolean }) => {
-            if (!selectedChat) return
+            if (!id) return
             setFetchingChat(true)
             const message = await getMessages(id as string, isGroup)
             setChats(message.data as any)
@@ -56,7 +56,7 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
       }, [isGroup, id])
       useEffect(() => {
             socket?.on("get-message", ({ senderId, message }) => {
-                  if (senderId !== selectedChat) return
+                  if (senderId !== id) return
                   setChats((prev: any) => {
                         return [...prev, message]
                   })
