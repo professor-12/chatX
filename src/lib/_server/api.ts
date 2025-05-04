@@ -134,7 +134,6 @@ export const getChats = async () => {
             time: chat.message[0]?.createdAt || chat.createdAt,
             isGroup: true,
         }));
-
         // Remove duplicates (unique sender-receiver pairs)
         const seen = new Set();
         const uniqueDirectMessages = directMessages.filter(
@@ -169,7 +168,6 @@ export const getChats = async () => {
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
 };
-
 
 export const addToContact = async (id: string) => {
     const { data } = await checkAuth();
@@ -322,7 +320,28 @@ export const sendMessage = async ({
                 picture: file,
                 groupId,
             },
+            include: { sender: { include: { profile: true } } },
         });
+        try {
+            await fetch("/api/notification/send-notification", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: "New message",
+                    body: message,
+                    icon: "/i-ico.png",
+                    data: {
+                        senderName: _message.sender.name,
+                        message: _message.message,
+                    },
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+            });
+        } catch (err) {
+            console.log("Error sending notification", err);
+        }
         return { data: _message, error: null };
     } catch (err) {
         return { data: null, error: "An error occured" };
@@ -347,7 +366,6 @@ export const createGroupChat = async ({ name, description, groupP }) => {
         console.log(err);
     }
 };
-
 
 export const createImageURL = async (image: string) => {
     const cloudinaryUrl = "";

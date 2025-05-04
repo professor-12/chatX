@@ -54,4 +54,5 @@ const useServiceWorker = () => {
     }, []);
 };
 
+
 export default useServiceWorker;
