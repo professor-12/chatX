@@ -162,25 +162,22 @@ export const checkAuth = async (): Promise<
 > => {
     try {
         const token = (await cookies()).get("token")?.value;
-        if (!token) throw new Error("/login", { cause: "unauthorized_access" });
+        if (!token) throw new Error("UNAUTHORIZED_ACCESS");
 
         const { sessionId } = (await verifyToken(token)) as {
             sessionId: string;
         };
-        if (!sessionId)
-            throw new Error("/login", { cause: "unauthorized_access" });
+        if (!sessionId) throw new Error("UNAUTHORIZED_ACCESS");
 
         const session = await prisma.session.findFirst({
             where: { id: sessionId, createdAt: { lt: new Date() } },
         });
-        if (!session)
-            throw new Error("/login", { cause: "unauthorized_access" });
+        if (!session) throw new Error("UNAUTHORIZED_ACCESS");
 
         return { error: null, data: session.userId };
     } catch (err) {
-        console.log(err);
-        console.log(err.cause);
-        if (err.cause === "unauthorized_access") {
+        console.log(err.message);
+        if (err instanceof Error && err.message === "UNAUTHORIZED_ACCESS") {
             redirect("/login");
         }
         console.error("Auth error:", err);

@@ -33,6 +33,8 @@ model User {
   usercontact Contact[] @relation(name: "contactRelation")
   groupCreatedBy Group[] @relation(name: "groupCreatedBy")
   
+
+  subscriptions Subscription[]
 }
 
 model Group {
@@ -109,3 +111,13 @@ model Contact {
 }
 
 
+
+model Subscription {
+  id String @map("_id") @id @default(uuid())
+  value String @unique
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])
+}
