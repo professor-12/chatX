@@ -1,17 +1,17 @@
 "use server";
-import { v2 as cloudinary } from "cloudinary";
+// import { v2 as cloudinary } from "cloudinary";
 
 import { checkAuth } from "./auth";
 import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
 import { _sendNotification } from "../notification";
 
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-    secure: true,
-});
+// cloudinary.config({
+//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//     api_key: process.env.CLOUDINARY_API_KEY,
+//     api_secret: process.env.CLOUDINARY_API_SECRET,
+//     secure: true,
+// });
 
 export const getContact = async () => {
     const { data } = await checkAuth();
@@ -386,7 +386,8 @@ export const uploadImage = async (file: File) => {
 };
 
 export const handleFileUpload = async (file: string) => {
-    return (await cloudinary.uploader.upload(file)).secure_url;
+    // return (await cloudinary.uploader.upload(file)).secure_url;
+    return "";
 };
 
 export const createGroup = async ({
