@@ -2,9 +2,8 @@
 import { checkAuth } from "./auth";
 import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
-import { cloudinaryV2 as cloudinary } from "../cloudinary/cloudinary.config";
+import cloudinary from "../cloudinary/cloudinary.config";
 import { _sendNotification } from "../notification";
-// cloudinary_config();
 
 export const getContact = async () => {
     const { data } = await checkAuth();
