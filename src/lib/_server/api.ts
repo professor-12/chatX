@@ -2,7 +2,7 @@
 import { checkAuth } from "./auth";
 import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
-import { d as cloudinary } from "../cloudinary/cloudinary.config";
+import { cloudinaryV2 as cloudinary } from "../cloudinary/cloudinary.config";
 import { _sendNotification } from "../notification";
 // cloudinary_config();
 
