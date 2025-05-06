@@ -1,9 +1,17 @@
 "use server";
+import { v2 as cloudinary } from "cloudinary";
+
 import { checkAuth } from "./auth";
 import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
-import cloudinary from "../cloudinary/cloudinary.config";
 import { _sendNotification } from "../notification";
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    secure: true,
+});
 
 export const getContact = async () => {
     const { data } = await checkAuth();
