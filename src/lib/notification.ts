@@ -8,8 +8,8 @@ webPush.setVapidDetails(
 );
 
 export const _sendNotification = async ({ body, icon, title, receiverId }) => {
+    console.log({ body, icon, title, receiverId });
     if (!body || !icon || !title || !receiverId) {
-        console.log("All fiends are required");
         return { error: "Null" };
     }
     if (!process.env.NEXT_PUBLIC_VAPID_KEY || !process.env.VAPID_PRIVATE_KEY) {
@@ -34,7 +34,7 @@ export const _sendNotification = async ({ body, icon, title, receiverId }) => {
                     subscriptionData,
                     JSON.stringify({
                         title,
-                        icon: "/i-ico.png",
+                        icon,
                         body,
                     })
                 );
