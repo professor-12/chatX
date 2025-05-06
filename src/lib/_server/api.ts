@@ -6,6 +6,7 @@ import {
     cloudinary_config,
     d as cloudinary,
 } from "../cloudinary/cloudinary.config";
+import { _sendNotification } from "../notification";
 // cloudinary_config();
 
 export const getContact = async () => {
@@ -320,16 +321,16 @@ export const sendMessage = async ({
             },
             include: { sender: { include: { profile: true } } },
         });
-        // try {
-        //     _sendNotification({
-        //         title: "New message from " + _message.sender.name,
-        //         body: message,
-        //         icon: "/i-ico.png",
-        //         receiverId,
-        //     });
-        // } catch (err) {
-        //     console.log("Error sending notification....", err);
-        // }
+        try {
+            _sendNotification({
+                title: "New message from " + _message.sender.name,
+                body: message,
+                icon: "/i-ico.png",
+                receiverId,
+            });
+        } catch (err) {
+            console.log("Error sending notification....", err);
+        }
         return { data: _message, error: null };
     } catch (err) {
         return { data: null, error: "An error occured" };
