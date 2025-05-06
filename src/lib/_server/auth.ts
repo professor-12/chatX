@@ -72,9 +72,9 @@ export const createuser = async (prevstate: User, data: FormData) => {
                         username: "",
                     },
                 },
-                // groupMember: {
-                //     connect: { id: "cm9dvfogr0000hovs9zp9sbs6" },
-                // },
+                groupMember: {
+                    connect: { id: "cmaccpl140000horw6zhua9tt" },
+                },
             },
         });
         const session = await prisma.session.create({

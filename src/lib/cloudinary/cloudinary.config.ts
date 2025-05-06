@@ -8,12 +8,10 @@ const config = {
     secure: true,
 };
 
-const cloudinary_config = () => {
-    d.config({
-        cloud_name: config.cloud_name,
-        api_key: config.api_key,
-        api_secret: config.api_secret,
-    });
-};
+d.config({
+    cloud_name: config.cloud_name,
+    api_key: config.api_key,
+    api_secret: config.api_secret,
+});
 
-export { d, cloudinary_config };
+export { d };
