@@ -7,34 +7,29 @@ webPush.setVapidDetails(
     process.env.VAPID_PRIVATE_KEY
 );
 
-export const sendNotification = async ( {
-        body,
-        icon,
-        title,
-        receiverId,
-    }) => {
+export const _sendNotification = async ({ body, icon, title, receiverId }) => {
     if (!body || !icon || !title || !receiverId) {
-      console.log("All fiends are required")
-        return {error:"Null"}
+        console.log("All fiends are required");
+        return { error: "Null" };
     }
     if (!process.env.NEXT_PUBLIC_VAPID_KEY || !process.env.VAPID_PRIVATE_KEY) {
-        console.log("No vapid Key")
+        console.log("No vapid Key");
         return;
     }
     const subscriptions = await prisma.subscription.findMany({
         where: { userId: receiverId },
     });
-    console.log("Subscriptions",subscriptions)
+    console.log("Subscriptions", subscriptions);
     if (!subscriptions) {
-      console.log("No susbscriptions")
-    return;
+        console.log("No susbscriptions");
+        return;
     }
-    console.log("Sending Notification...")
+    console.log("Sending Notification...");
     try {
         await Promise.allSettled(
             subscriptions.map(async (sub) => {
                 const subscriptionData = JSON.parse(sub.value);
-                console.log("Subscription data",subscriptionData)
+                console.log("Subscription data", subscriptionData);
                 await webPush.sendNotification(
                     subscriptionData,
                     JSON.stringify({
@@ -46,8 +41,8 @@ export const sendNotification = async ( {
             })
         );
     } catch (err) {
-        console.log(err,"Error")
+        console.log(err, "Error");
     }
 
-    console.log("Success")
+    console.log("Success");
 };
