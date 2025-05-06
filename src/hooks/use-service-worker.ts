@@ -8,10 +8,11 @@ const useServiceWorker = () => {
                 if (Notification.permission === "default") {
                     const permission = await Notification.requestPermission();
                     if (permission !== "granted") {
-                        console.log("Permission not granted");
+                        await Notification.requestPermission();
                         return;
                     }
                 } else if (Notification.permission === "denied") {
+                    alert("Please enable notification")
                     console.log("Permission denied");
                     return;
                 }
