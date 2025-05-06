@@ -260,7 +260,6 @@ export const getGroupProfile = async (id: string) => {
     try {
         const getGroupInfo = await prisma.group.findFirst({
             where: { id },
-            omit: {},
         });
         const { name, groupPics } = getGroupInfo;
 
