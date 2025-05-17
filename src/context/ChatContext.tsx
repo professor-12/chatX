@@ -6,8 +6,8 @@ import { useUserContext } from './user-context'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 
 interface IContext {
-      selectedChat: { id: null | string, isGroup: boolean }
-      setSelectedChat: React.Dispatch<React.SetStateAction<{ id: string | null, isGroup: boolean }>>
+      selectedChat: { id: null | string, isGroup: boolean, type: "video" | "chat" }
+      setSelectedChat: React.Dispatch<React.SetStateAction<{ id: string | null, isGroup: boolean, type: "video" | "chat" }>>
       fetchChat: (a: { id: string, isGroup: boolean }) => Promise<void>
       chats: Array<any>
       setChats: React.Dispatch<React.SetStateAction<never[]>>
@@ -38,7 +38,7 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
             queryKey: ["get-chat"]
       })
       const { socket } = useSocket()
-      const [selectedChat, setSelectedChat] = useState<{ id: null, isGroup: false }>({ id: null, isGroup: false }) as any
+      const [selectedChat, setSelectedChat] = useState<{ id: null, isGroup: false, type: "video" | "chat" }>({ id: null, isGroup: false, type: "chat" }) as any
       const { isGroup, id } = selectedChat
       const [chats, setChats] = useState([]) as any
       const { userId } = useUserContext()

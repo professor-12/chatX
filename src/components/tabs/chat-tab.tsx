@@ -65,14 +65,16 @@ export default Chat
 export const ChatCard = ({ contact }: { contact: any }) => {
       const { setSelectedChat } = useChatContext()
       const isGroup = contact?.isGroup
-      return <div onClick={() => { setSelectedChat({ id: contact.id, isGroup }) }} className='hover:shadow hover:bg-slate-200/80 hover:scale-100 transition-all duration-200 scale-[98%]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
+      return <div onClick={() => { setSelectedChat((prev) => ({ ...prev, id: contact.id, isGroup, type: "chat" })) }} className='hover:shadow hover:bg-slate-200/80 hover:scale-100 transition-all duration-200 scale-[98%]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
             <div className='flex items-center justify-between'>
                   <div className='flex  items-center gap-1'>
-                        <img
-                              src={contact?.avatar}
-                              alt='avatar'
-                              className='w-14 border border-border h-14 rounded-full'
-                        />
+                        <div className='relative  border border-border  rounded-full overflow-clip w-14 h-14'>
+                              <img
+                                    src={!!contact?.avatar ? contact?.avatar : null}
+                                    alt='avatar'
+                                    className='h-full w-full top-0 bottom-0 object-cover left-0 right-0 absolute object-center'
+                              />
+                        </div>
                         <div className='ml-4'>
                               <h1 className='text-lg truncate'>{contact?.name}</h1>
                               <div className='flex w-full items-center  gap-2'>

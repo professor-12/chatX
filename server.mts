@@ -35,6 +35,11 @@ app.prepare().then(() => {
                 }
             }
         });
+
+        socket.on("video:chat", (id, data, peerId) => {
+            console.log(id, data, peerId);
+            console.log("this is coming from video:chat event");
+        });
     });
 
     httpServer

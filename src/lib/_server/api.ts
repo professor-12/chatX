@@ -1,10 +1,12 @@
 "use server";
-// import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 
 import { checkAuth } from "./auth";
 import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
 import { _sendNotification } from "../notification";
+
+console.log(process.env.CLOUDINARY_CLOUD_NAME);
 
 // cloudinary.config({
 //     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -386,7 +388,7 @@ export const uploadImage = async (file: File) => {
 };
 
 export const handleFileUpload = async (file: string) => {
-    // return (await cloudinary.uploader.upload(file)).secure_url;
+    return (await cloudinary.uploader.upload(file)).secure_url;
     return "";
 };
 
@@ -421,4 +423,4 @@ export const createGroup = async ({
         return { error: err };
     }
 };
-3
+3;

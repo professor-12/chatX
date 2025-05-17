@@ -60,7 +60,13 @@ const GroupChat = () => {
                         <div className='flex items-center gap-2'>
                               <div className="size-[5rem] relative bg-blue-300 overflow-hidden rounded-full ">
                                     {
-                                          fileString ? <Image src={fileString as string} alt="Profile Pics" className='w-full h-full' height={500} width={600} /> :
+                                          fileString ?
+                                                <img
+                                                      src={fileString}
+                                                      alt='avatar'
+                                                      className='h-full w-full top-0 bottom-0 object-cover left-0 right-0 absolute object-center'
+                                                />
+                                                :
                                                 <>
                                                       <input accept='image/*' onChange={_handleFileUpload} name="group" ref={fileRef} type="file" className='hidden' id="group-pics" />
                                                       <label htmlFor="group-pics" className='absolute cursor-pointer inset-0 flex justify-center items-center'>
