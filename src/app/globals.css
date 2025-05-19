@@ -21,6 +21,7 @@ body {
 
 @layer base {
     :root {
+        --hover-card: 0 0% 89.8%;
         --background: 0 0% 100%;
         --foreground: 0 0% 3.9%;
         --card: 0 0% 100%;
@@ -48,6 +49,7 @@ body {
         --radius: 0.5rem;
     }
     .dark {
+        --hover-card: 0 0% 3.9%;
         --background: 0 0% 3.9%;
         --foreground: 0 0% 98%;
         --card: 0 0% 3.9%;

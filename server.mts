@@ -40,6 +40,9 @@ app.prepare().then(() => {
             console.log(id, data, peerId);
             console.log("this is coming from video:chat event");
         });
+        socket.on("call:user", (id, peerId) => {
+            console.log(id, peerId);
+        });
     });
 
     httpServer

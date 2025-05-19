@@ -19,8 +19,8 @@ const Component = ({ children }) => {
                   }
             </div>
             :
-            <div className='w-full flex h-screen  overflow-hidden relative'>
-                  <div className='md:h-full max-md:hidden bottom-0 w-full md:w-[80px]   bg-accent dark:bg-accent/45 border-r'>
+            <div className='w-full  flex h-screen  overflow-hidden relative'>
+                  <div className='md:h-full max-md:hidden bottom-0 w-full md:w-[80px]  bg-accent dark:bg-accent/45 border-r'>
                         <SideNav />
                   </div>
                   {/* Medium Screen nav */}

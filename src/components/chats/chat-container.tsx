@@ -31,7 +31,6 @@ const ChatCard = ({ chat, userId }: { chat: any, userId: string | null }) => {
       const { sender } = chat
       const { selectedChat: { isGroup } } = useChatContext()
       const isRight = (userId == (chat?.senderId) || !chat?.senderId)
-      console.log(chat,userId)
       return <div className={`py-1 w-full  flex ${isRight && "justify-end"}`}>
             <div className={isRight ? "text-right" : ""}>
                   <div className="flex gap-2">

@@ -2,10 +2,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Peer } from "peerjs";
 import useSocket from '@/hooks/useSocket';
-import { checkAuth } from '@/lib/_server/auth';
-import Stream from 'stream';
 import usePeer from '@/hooks/use-peer';
-const Context = createContext({})
+import { useQuery } from '@tanstack/react-query';
+import { getUserProfile } from '@/lib/_server/api';
+const Context = createContext<{
+      handleCallUser: (id: string) => any
+} | {}>({})
 
 
 
@@ -17,18 +19,21 @@ export const useVideoContext = () => {
 }
 
 const VideoChatContext = ({ children }: { children: React.ReactNode }) => {
+      const { data } = useQuery({ queryKey: ["get-userprofile"], queryFn: getUserProfile })
       const { peer, peerId } = usePeer()
+      console.log(data)
 
       const { socket } = useSocket()
       const [localStream, setLocalStream] = useState(undefined)
 
-      const handleCallUser = (id) => {
+      const handleCallUser = (id: string) => {
             if (peerId) {
                   socket?.emit("call:user", id, peerId)
             }
       }
 
       useEffect(() => {
+
             const handleIncomingCall = (user_peerId: string) => {
                   if (!peerId || !localStream) return;
                   // const call = peer?.call(user_peerId, localStream)

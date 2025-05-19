@@ -3,6 +3,7 @@
 import { useTabContext } from '@/context/TabContext'
 import React, { ReactNode } from 'react'
 import ProfileCard from './ProfileCard';
+import useDarkMode from '@/hooks/use-darkmode';
 
 export const links = [
       { href: '/home', label: 'Home' },
@@ -13,6 +14,7 @@ export const links = [
 ]
 
 const SideNav = () => {
+      const { dark, toggle } = useDarkMode()
       const { activeTab, changeActiveTab } = useTabContext()
       return (
             <aside className="w-full text-white/60 px-3 flex flex-col h-screen    py-6">
@@ -29,21 +31,25 @@ const SideNav = () => {
                                                       <li key={index} className={`dark:text-white/60 ${isActive && "bg-primary/10"} duration-100 transition-all  p-3 hover:bg-primary/20 text-primary cursor-pointer rounded-xl`}>
                                                             {Svgs[index]}
                                                       </li>
-                                                      <div className='absolute left-16 top-1 duration-200 transition-all hidden group-hover:inline rounded-lg p-2 min-w-[12px] dark:bg-white bg-card shadow border dark:text-slate-200 text-sm text-black font-medium z-[12] capitalize'>{links[index].href.split("/")[2] ?? "Home"}</div>
+                                                      <div className='absolute left-16 top-1 duration-200 transition-all hidden group-hover:inline rounded-lg p-2 min-w-[12px] dark:bg-white bg-card shadow border  text-sm text-black font-medium z-[12] capitalize'>{links[index].href.split("/")[2] ?? "Home"}</div>
                                                 </div>
                                           )
                                     })
                               }
                         </ul>
                         <ul className='mt-5 gap-1 flex-col items-center flex'>
-                              {
-                                    new Array(2).fill(null).map((_, index) => (
-                                          <li key={index} className={'!text-white/60 p-3  cursor-pointer rounded-xl'}>
-                                                {Svgs[Svgs.length - 2 + index]}
-                                          </li>
-                                    ))
+                              <li onClick={toggle} className={'p-3 dark:text-white/60 text-primary cursor-pointer rounded-xl'}>
+                                    {
+                                          dark ?
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className=""><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
+                                                :
+                                                Svgs[Svgs.length - 2 + 0]
+                                    }
+                              </li>
+                              <li className={'p-3 dark:text-white/60 text-primary cursor-pointer rounded-xl'}>
+                                    {Svgs[Svgs.length - 3]}
+                              </li>
 
-                              }
                         </ul>
                   </div>
             </aside>

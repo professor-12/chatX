@@ -7,16 +7,18 @@ import { useChatContext } from '@/context/ChatContext'
 import useCallUser from '@/hooks/use-call-user'
 import useLocalStream from '@/hooks/use-localStream'
 import Layout from './layout'
+import { useVideoContext } from '@/context/VideoChatContext'
 
 const VideoChatPage = () => {
       const { socket } = useSocket()
       const { peer, peerId } = usePeer()
+      // const { handleCallUser } = useVideoContext()
       const local = useLocalStream()
       const { selectedChat } = useChatContext()
-      const  {remoteStreams} = useCallUser(local)
+      const { remoteStreams } = useCallUser(local)
       useEffect(() => {
             if (peerId && selectedChat.id) {
-                  socket?.emit("incoming:video", peerId, selectedChat.id)
+                  // handleCallUser(selectedChat.id)
             }
       }, [socket, peerId])
       const ref = useRef([]) as any

@@ -65,7 +65,7 @@ export default Chat
 export const ChatCard = ({ contact }: { contact: any }) => {
       const { setSelectedChat } = useChatContext()
       const isGroup = contact?.isGroup
-      return <div onClick={() => { setSelectedChat((prev) => ({ ...prev, id: contact.id, isGroup, type: "chat" })) }} className='hover:shadow hover:bg-slate-200/80 hover:scale-100 transition-all duration-200 scale-[98%]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
+      return <div onClick={() => { setSelectedChat((prev) => ({ ...prev, id: contact.id, isGroup, type: "chat" })) }} className='hover:shadow  hover:bg-input hover:scale-100 transition-all duration-200 scale-[98%]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
             <div className='flex items-center justify-between'>
                   <div className='flex  items-center gap-1'>
                         <div className='relative  border border-border  rounded-full overflow-clip w-14 h-14'>
