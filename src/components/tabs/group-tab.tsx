@@ -45,7 +45,7 @@ const GroupChat = () => {
       }
 
       function handleOnSucess(data: any) {
-            setSelectedChat(() => ({ id: data, isGroup: true }))
+            setSelectedChat(() => ({ id: data, isGroup: true, type: "chat" }))
             lastChatQuery.refetch()
             changeActiveTab("home")
       }
@@ -97,8 +97,6 @@ const GroupChat = () => {
 }
 
 export default GroupChat
-
-
 
 
 

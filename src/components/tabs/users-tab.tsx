@@ -95,7 +95,7 @@ export const AddContactModal = ({ handleCloseModal, contact }: { handleCloseModa
       const { isPending: mutating, error: _error, mutate } = useMutation({ mutationFn: async () => { await addToContact(contact?.id); handleCloseModal() }, mutationKey: ["create-contact", contact?.id] })
 
       return <BackDrop className='cursor-pointer' onClick={mutating ? () => { } : handleCloseModal}>
-            <div onClick={(e) => e.stopPropagation()} className='rounded-xl bg-white items-center shadow flex gap-4 flex-col cursor-default py-4 px-6 w-[12rem]  border-border border'>
+            <div onClick={(e) => e.stopPropagation()} className='rounded-xl bg-white dark:bg-black items-center shadow flex gap-4 flex-col cursor-default py-4 px-6 w-[12rem]  border-border border'>
                   {
                         isPending ?
                               "loading"

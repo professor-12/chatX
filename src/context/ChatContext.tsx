@@ -44,16 +44,46 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
       const { userId } = useUserContext()
       const [fetchingChat, setFetchingChat] = useState(true)
 
-      const fetchChat = async ({ id, isGroup = false }: { id: string, isGroup: boolean }) => {
+      const fetchChat = async ({ controller, id, isGroup = false }: { id: string, isGroup: boolean, controller: AbortController }) => {
             if (!id) return
             setFetchingChat(true)
-            const message = await getMessages(id as string, isGroup)
-            setChats(message.data as any)
-            setFetchingChat(false)
+            try {
+                  fetch('/api/getMessages', { method: "POST", body: JSON.stringify({ id, isGroup }), signal: controller.signal })
+                        .then((data) => data.json())
+                        .then((json) => {
+                              setChats(json.data as any)
+                        })
+            } catch (err) {
+                  console.log(err)
+            } finally {
+                  setFetchingChat(false)
+            }
       }
       useEffect(() => {
-            fetchChat({ id, isGroup })
+            if (!id) return
+            const controller = new AbortController();
+            (async () => {
+                  setFetchingChat(true)
+                  try {
+                        const resource = await fetch('/api/getMessages', { method: "POST", body: JSON.stringify({ id, isGroup }), signal: controller.signal });
+                        const data = await resource.json()
+                        setChats(data.data as any)
+
+                  } catch (err) {
+                        console.log(err)
+                  } finally {
+                        console.log("This is called");
+                        setFetchingChat(false)
+                  }
+            })()
+            // fetchChat({ controller, id, isGroup })
+            return () => {
+                  controller.abort()
+                  setFetchingChat(true)
+                  // setSelectedChat({ isGroup: false, type: "chat", id: null })
+            }
       }, [isGroup, id])
+
       useEffect(() => {
             socket?.on("get-message", ({ senderId, message }) => {
                   if (senderId !== id) return

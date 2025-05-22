@@ -47,7 +47,7 @@ body {
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
         --radius: 0.5rem;
-        --baser-color: 0, 0%, 0%;
+        --baser-color: 0deg 0% 92.16% !important;
         --highlighter-color: 0deg 0% 96.08% !important;
     }
     .dark {
@@ -102,6 +102,7 @@ body {
 .scroll-hidden::-webkit-scrollbar {
     display: none;
 }
+
 
 .react-loading-skeleton {
     --base-color: hsl(var(--baser-color)) !important;

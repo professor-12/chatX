@@ -17,10 +17,10 @@ const SelectMembers = ({ addMembers, setaddMembers, cancel }: IMembersState & { 
       })
 
       return (
-            <div className='w-[24rem] mx-auto cursor-default bg-white space-y-4 p-4 rounded-xl border  max-w-[30rem]'>
+            <div className='w-[24rem] mx-auto cursor-default bg-white dark:bg-black space-y-4 p-4 rounded-xl border  max-w-[30rem]'>
                   <h1 className='text-lg'>Add Members</h1>
                   {
-                        isPending ?  <div className="h-[30vh] flex items-center justify-center">
+                        isPending ? <div className="h-[30vh] flex items-center justify-center">
                               <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="22"
@@ -43,14 +43,14 @@ const SelectMembers = ({ addMembers, setaddMembers, cancel }: IMembersState & { 
                                     <path d="m4.9 4.9 2.9 2.9" />
                               </svg>
                         </div> :
-                        <div className="h-[30vh] w-full space-y-4 overflow-y-auto overflow-x-hidden min-h-[30rem]">
+                              <div className="h-[30vh] w-full space-y-4 overflow-y-auto overflow-x-hidden min-h-[30rem]">
 
-                        {
-                              data?.data?.map((user) => {
-                                    return <SelectMembersCard addMembers={addMembers} setaddMembers={setaddMembers} user={user} key={user.id} />
-                              })
-                        }
-                  </div>
+                                    {
+                                          data?.data?.map((user) => {
+                                                return <SelectMembersCard addMembers={addMembers} setaddMembers={setaddMembers} user={user} key={user.id} />
+                                          })
+                                    }
+                              </div>
                   }
                   <Button disabled={isPending} onClick={() => cancel()} className='w-full'>Done</Button>
             </div>
@@ -61,7 +61,6 @@ export default SelectMembers
 
 const SelectMembersCard = ({ user, addMembers, setaddMembers }: { user: any } & IMembersState) => {
       const isSelected = addMembers.findIndex((member) => member.id == user.id) > -1
-      console.log(user.profile.profilePics)
       const handleAddMember = () => {
             if (isSelected) {
                   setaddMembers((prev) => prev.filter((member) => member.id != user.id))
@@ -70,7 +69,7 @@ const SelectMembersCard = ({ user, addMembers, setaddMembers }: { user: any } & 
             }
       }
       return (
-            <div className='flex justify-between gap-3 items-center'>
+            <div className='flex scroll-px-64 justify-between gap-3 items-center'>
                   <div className='flex items-center gap-2'>
                         <div>
                               <div style={{ backgroundImage: `url("${user?.profile?.profilePics}")` }} className="size-[3rem] relative bg-blue-300 overflow-hidden rounded-full ">

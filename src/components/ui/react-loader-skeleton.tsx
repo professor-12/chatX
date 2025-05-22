@@ -10,15 +10,15 @@ const ReactSkeleton: React.FC<{ children: React.ReactNode }> | any = ({ children
 
 ReactSkeleton.Circle = (props?: { size: string | number }) => {
       const { } = props.size
-      return <Skeleton className='dark!bg-red-400' borderRadius={"50%"}  {...props} />
+      return <Skeleton  borderRadius={"50%"}  {...props} />
 }
 
 ReactSkeleton.Square = (props: SkeletonProps) => {
-      return <Skeleton className='dark:!bg-red-400' {...props} />
+      return <Skeleton  {...props} />
 }
 
 ReactSkeleton.Reactangle = (props: SkeletonProps) => {
-      return <Skeleton className='dark:!bg-red-400' {...props} />
+      return <Skeleton {...props} />
 }
 
 
