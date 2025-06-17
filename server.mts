@@ -36,13 +36,16 @@ app.prepare().then(() => {
             }
         });
 
-        socket.on("video:chat", (id, data, peerId) => {
-            console.log(id, data, peerId);
+        socket.on("video:chat", (callerId, userId, peerId) => {
+            console.log("This is running", callerId, userId);
+            const socketId = connectedUsers.get(callerId);
+            // console.log(id, data, peerId);
+            socket.to(socketId).emit("call:user", userId, peerId);
             console.log("this is coming from video:chat event");
         });
-        socket.on("call:user", (id, peerId) => {
-            console.log(id, peerId);
-        });
+        // socket.on("call:user", (id, peerId) => {
+        //     console.log(id, peerId);
+        // });
     });
 
     httpServer

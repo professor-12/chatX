@@ -10,7 +10,6 @@ const VideoChatPage = () => {
       const { socket } = useSocket()
       const [answeredCall, setAnsweredCall] = useState(false)
 
-
       useEffect(() => {
 
       }, [socket])
@@ -18,7 +17,7 @@ const VideoChatPage = () => {
             <Layout>
                   <div className="h-[100dvh] w-full bg-slate-200/10">
                         <VideoHeader />
-                        {/* <VideoContainer /> */}
+                        <VideoContainer />
                         <RingingUi />
                   </div>
             </Layout>

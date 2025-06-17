@@ -14,7 +14,7 @@ const VideoContainer = () => {
             })()
       }, [local])
       return (
-            <main className='w-full space-y-3 px-4'>
+            <main className='space-y-3 p-4 my-6 mx-auto'>
                   <div className='w-4/5 bg-gray-300/30 overflow-hidden border-4   border-blue-300 min-w-[200px]  relative  2xl:aspect-video rounded-2xl'>
                         <video ref={ref} className='w-full h-full object-cover -scale-x-100 object-center inset-0 top-0 bottom-0 left-0 right-0' muted autoPlay  ></video>
                         <div className='absolute flex flex-col justify-en  z-12 top-0 right-0 w-[20%] gap-3  p-2  h-full'>

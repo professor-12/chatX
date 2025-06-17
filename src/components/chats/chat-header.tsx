@@ -20,7 +20,7 @@ const ChatHeader = () => {
             }
       })
       return (
-            <div className='h-16 max-md:bg-white top-0 max-md:fixed w-full z-[233] max-md:top-0 backdrop:blur-sm flex px-5 items-center  border-border border-b'>
+            <div className='h-16 dark:bg-black max-md:bg-white left-0 top-0 max-md:fixed w-full z-[233] max-md:top-0 backdrop:blur-sm flex px-5 items-center  border-border border-b'>
                   {isPending ? <ChatHeaderLoadingSkeleton /> :
                         <div className='flex w-full justify-between items-center'>
                               <div className='flex items-center gap-4'>
@@ -35,11 +35,11 @@ const ChatHeader = () => {
                                     </div>
                                     <p className='text-xl font-medium'>{data?.data?.name}</p>
                               </div>
-                              <div onClick={() => { setSelectedChat((prev) => ({ ...prev, type: "video" })) }}>
+                              {/* <div onClick={() => { setSelectedChat((prev) => ({ ...prev, type: "video" })) }}>
                                     <div className='flex items-center text-muted cursor-pointer hover:bg-primary/10 p-2 justify-center size-[40px] rounded-full'>
                                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide cursor-pointer text-slate-800 lucide-video-icon lucide-video"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" /><rect x="2" y="6" width="14" height="12" rx="2" /></svg>
                                     </div>
-                              </div>
+                              </div> */}
 
                         </div>
                   }

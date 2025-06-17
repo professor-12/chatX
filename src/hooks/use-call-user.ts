@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import useSocket from "./useSocket";
 import usePeer from "./use-peer";
-import useLocalStream from "./use-localStream";
+import { useUserContext } from ".././context/user-context";
+// import useLocalStream from "./use-localStream";
 import { useChatContext } from "@/context/ChatContext";
 import { checkAuth } from "@/lib/_server/auth";
 
-const useCallUser = (localStream) => {
+const useCallUser = () => {
     const { socket } = useSocket();
+    const { userId } = useUserContext();
     // const localStream = useLocalStream();
     const {
-        selectedChat: { id },
+        selectedChat: { id: callerId },
     } = useChatContext();
     const { peer, peerId } = usePeer();
     const [remoteStreams, setRemoteStream] = useState([]);
@@ -20,34 +22,35 @@ const useCallUser = (localStream) => {
             onAnswer(stream);
         });
     };
-    useEffect(() => {
-        peer?.on("call", (call) => {
-            call.answer(localStream);
-            call.on("stream", (stream) => {
-                console.log(stream, "This is a remote stream");
-            });
-        });
-        return () => {
-            peer?.off("call", (call) => {
-                call.answer();
-                call.on("stream", (stream) => {
-                    console.log(stream, "This is a remote stream");
-                });
-            });
-        };
-    }, [peer, localStream]);
+
+    // useEffect(() => {
+    //     if (!peer || !localStream) return;
+    //     peer?.on("call", (call) => {
+    //         call.answer(localStream);
+    //         call.on("stream", (stream) => {
+    //             console.log(stream, "This is a remote stream");
+    //         });
+    //     });
+    //     return () => {
+    //         peer?.off("call", (call) => {
+    //             call.answer();
+    //             call.on("stream", (stream) => {
+    //                 console.log(stream, "This is a remote stream");
+    //             });
+    //         });
+    //     };
+    // }, [peer, localStream]);
 
     useEffect(() => {
         (async () => {
-            const { data } = await checkAuth();
-            if (socket && data && id && peerId) {
-                console.log(id, data, peerId);
-                socket?.emit("video:chat", id, data, peerId);
+            console.log("Calling user", callerId, peerId);
+            if (socket && userId && callerId && peerId) {
+                socket?.emit("video:chat", callerId, userId, peerId);
             }
         })();
-    }, [id, peerId]);
+    }, [callerId, peerId, socket,userId]);
 
-    return { remoteStreams, localStream };
+    return { remoteStreams };
 };
 
 export default useCallUser;

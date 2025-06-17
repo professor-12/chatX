@@ -2,36 +2,37 @@
 import Peer from "peerjs";
 import { useEffect, useRef, useState } from "react";
 
-const peer = new Peer();
+var peer = new Peer();
 
 const usePeer = () => {
-    const [_peer, setPeer] = useState<undefined | Peer>(undefined);
     const [peerId, setPeerId] = useState("");
+    console.log(peerId, "PeerId");
 
-    const handleCallUserPeer = (stream, peerId, onAnswer, onClose) => {
-        if (!_peer) return;
-        const call = _peer?.call(peerId, stream);
-        call.on("stream", (stream) => {
-            onAnswer(stream);
-        });
-        call.on("close", () => {
-            onClose();
-        });
-    };
-    const toggleMic = (localStream: MediaStream) => {
-        localStream.getAudioTracks().forEach((e) => {
-            e.enabled = !e.enabled;
-        });
-    };
-    const toggleVid = (localStream: MediaStream) => {
-        localStream.getVideoTracks().forEach((e) => {
-            e.enabled = !e.enabled;
-        });
-    };
+    // const handleCallUserPeer = (stream, peerId, onAnswer, onClose) => {
+    //     if (!_peer) return;
+    //     const call = _peer?.call(peerId, stream);
+    //     call.on("stream", (stream) => {
+    //         onAnswer(stream);
+    //     });
+    //     call.on("close", () => {
+    //         onClose();
+    //     });
+    // };
+    // const toggleMic = (localStream: MediaStream) => {
+    //     localStream.getAudioTracks().forEach((e) => {
+    //         e.enabled = !e.enabled;
+    //     });
+    // };
+    // const toggleVid = (localStream: MediaStream) => {
+    //     localStream.getVideoTracks().forEach((e) => {
+    //         e.enabled = !e.enabled;
+    //     });
+    // };
 
     useEffect(() => {
-        setPeer(peer);
+        // setPeer(peer);
         peer.on("open", (id) => {
+            console.log("PeerID: ",[id])
             setPeerId(id);
         });
         return () => {
@@ -41,7 +42,7 @@ const usePeer = () => {
         };
     }, []);
 
-    return { peerId, peer: _peer };
+    return { peerId, peer };
 };
 
 export default usePeer;
