@@ -180,7 +180,7 @@ export const checkAuth = async (): Promise<
         if (err instanceof Error && err.message === "UNAUTHORIZED_ACCESS") {
             redirect("/login");
         }
-        console.error("Auth error:", err);
+        
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };
     }
 };

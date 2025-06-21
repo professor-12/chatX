@@ -2,12 +2,13 @@
 import useSocket from '@/hooks/useSocket'
 import { getChats, getMessages } from '@/lib/_server/api'
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { useUserContext } from './user-context'
+import { useUserContext } from './user-context';
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 
+
 interface IContext {
-      selectedChat: { id: null | string, isGroup: boolean }
-      setSelectedChat: React.Dispatch<React.SetStateAction<{ id: string | null, isGroup: boolean }>>
+      selectedChat: { id: null | string, isGroup: boolean, type: "video" | "chat" }
+      setSelectedChat: React.Dispatch<React.SetStateAction<{ id: string | null, isGroup: boolean, type: "video" | "chat" }>>
       fetchChat: (a: { id: string, isGroup: boolean }) => Promise<void>
       chats: Array<any>
       setChats: React.Dispatch<React.SetStateAction<never[]>>
@@ -38,39 +39,79 @@ const ChatContext = ({ children }: { children: React.ReactNode }) => {
             queryKey: ["get-chat"]
       })
       const { socket } = useSocket()
-      const [selectedChat, setSelectedChat] = useState<{ id: null, isGroup: false }>({ id: null, isGroup: false }) as any
+      const [selectedChat, setSelectedChat] = useState<{ id: null, isGroup: false, type: "video" | "chat" }>({ id: null, isGroup: false, type: "chat" }) as any
       const { isGroup, id } = selectedChat
       const [chats, setChats] = useState([]) as any
       const { userId } = useUserContext()
       const [fetchingChat, setFetchingChat] = useState(true)
 
-      const fetchChat = async ({ id, isGroup = false }: { id: string, isGroup: boolean }) => {
+      const fetchChat = async ({ controller, id, isGroup = false }: { id: string, isGroup: boolean, controller: AbortController }) => {
             if (!id) return
             setFetchingChat(true)
-            const message = await getMessages(id as string, isGroup)
-            setChats(message.data as any)
-            setFetchingChat(false)
+            try {
+                  fetch('/api/getMessages', { method: "POST", body: JSON.stringify({ id, isGroup }), signal: controller.signal })
+                        .then((data) => data.json())
+                        .then((json) => {
+                              setChats(json.data as any)
+                        })
+            } catch (err) {
+                  console.log(err)
+            } finally {
+
+                  setFetchingChat(false)
+            }
       }
       useEffect(() => {
-            fetchChat({ id, isGroup })
+            if (!id) return
+            const controller = new AbortController();
+            (async () => {
+                  setFetchingChat(true)
+                  try {
+                        const resource = await fetch('/api/getMessages', { method: "POST", body: JSON.stringify({ id, isGroup }), signal: controller.signal });
+                        const data = await resource.json()
+                        setChats(data.data as any)
+
+                  } catch (err) {
+                        console.log(err)
+                  } finally {
+                        setFetchingChat(false)
+                  }
+            })()
+            // fetchChat({ controller, id, isGroup })
+            return () => {
+                  controller.abort({ reason: "Chat context unmounted" })
+                  setChats([])
+                  setFetchingChat(true)
+                  // setSelectedChat({ isGroup: false, type: "chat", id: null })
+            }
       }, [isGroup, id])
+
+
       useEffect(() => {
             socket?.on("get-message", ({ senderId, message }) => {
-                  if (senderId !== id) return
-                  setChats((prev: any) => {
-                        return [...prev, message]
-                  })
                   lastChatQuery.refetch()
-            })
-            return () => {
-                  socket?.off("get-message", ({ senderId, message }) => {
-                        if (senderId !== selectedChat) return
+                  console.log("This is a message", message, senderId, id, selectedChat)
+                  if (senderId == selectedChat.id && selectedChat.id) {
                         setChats((prev: any) => {
                               return [...prev, message]
                         })
+                  }
+
+            })
+            return () => {
+                  socket?.off("get-message", ({ senderId, message }) => {
+                        console.log("This is a message", senderId, id, selectedChat)
+                        if (senderId == id) {
+                              setChats((prev: any) => {
+                                    return [...prev, message]
+                              })
+                        }
+                        lastChatQuery.refetch()
+
                   })
             }
-      }, [socket, id, selectedChat])
+      }, [socket, id, selectedChat]
+      )
 
       return (
             <Context.Provider value={{ selectedChat, setSelectedChat, fetchChat, chats, setChats, fetchingChat, userId, lastChatQuery }}>{children}</Context.Provider>

@@ -65,7 +65,7 @@ export default UsersTab
 export const UserCard = ({ contact }: { contact: any }) => {
       const [openModal, setOpenModal] = useState(false)
       return <Fragment>
-            <div onClick={(e) => { setOpenModal(true); }} className='hover:bg-slate-200/80 hover:shadow hoer:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-300 scale-[0.9999]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
+            <div onClick={(e) => { setOpenModal(true); }} className='hover:bg-input hover:shadow hoer:bg-gradient-to-br from-slate-600/30 to-card hover:scale-100 transition-all duration-300 scale-[0.9999]  py-[0.75rem] px-2 border-border cursor-pointer  rounded-xl'>
                   <div className=''>
                         <div className='flex  items-center gap-3'>
                               <img
@@ -95,7 +95,7 @@ export const AddContactModal = ({ handleCloseModal, contact }: { handleCloseModa
       const { isPending: mutating, error: _error, mutate } = useMutation({ mutationFn: async () => { await addToContact(contact?.id); handleCloseModal() }, mutationKey: ["create-contact", contact?.id] })
 
       return <BackDrop className='cursor-pointer' onClick={mutating ? () => { } : handleCloseModal}>
-            <div onClick={(e) => e.stopPropagation()} className='rounded-xl bg-white items-center shadow flex gap-4 flex-col cursor-default py-4 px-6 w-[12rem]  border-border border'>
+            <div onClick={(e) => e.stopPropagation()} className='rounded-xl bg-white dark:bg-black items-center shadow flex gap-4 flex-col cursor-default py-4 px-6 w-[12rem]  border-border border'>
                   {
                         isPending ?
                               "loading"

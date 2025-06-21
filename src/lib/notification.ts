@@ -43,6 +43,4 @@ export const _sendNotification = async ({ body, icon, title, receiverId }) => {
     } catch (err) {
         console.log(err, "Error");
     }
-
-    console.log("Success");
 };

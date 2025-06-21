@@ -10,11 +10,11 @@ const ReactSkeleton: React.FC<{ children: React.ReactNode }> | any = ({ children
 
 ReactSkeleton.Circle = (props?: { size: string | number }) => {
       const { } = props.size
-      return <Skeleton borderRadius={"50%"}  {...props} />
+      return <Skeleton  borderRadius={"50%"}  {...props} />
 }
 
 ReactSkeleton.Square = (props: SkeletonProps) => {
-      return <Skeleton {...props} />
+      return <Skeleton  {...props} />
 }
 
 ReactSkeleton.Reactangle = (props: SkeletonProps) => {

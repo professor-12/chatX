@@ -26,7 +26,7 @@ const ChatSection = () => {
       const handleSendMessage = async () => {
             if (userInput.trim().length == 0) return;
             setIsSendingMessage(true)
-            if (isSendingMessage) return
+            if (isSendingMessage) return;
             setUserInput("")
             const temp = [...chats]
             setChats(prev => [...prev, {

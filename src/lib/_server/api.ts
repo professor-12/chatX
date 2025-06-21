@@ -1,6 +1,5 @@
 "use server";
 import { v2 as cloudinary } from "cloudinary";
-
 import { checkAuth } from "./auth";
 import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
@@ -415,4 +414,5 @@ export const createGroup = async ({
         return { error: err };
     }
 };
-3
+
+export const sendUserNotification = async () => {};
