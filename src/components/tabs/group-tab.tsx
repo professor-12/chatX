@@ -60,6 +60,7 @@ const GroupChat = () => {
                         <div className='flex items-center gap-2'>
                               <div className="size-[5rem] relative bg-blue-300 overflow-hidden rounded-full ">
                                     {
+
                                           fileString ?
                                                 <img
                                                       src={fileString}

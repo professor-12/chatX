@@ -5,6 +5,7 @@ import prisma from "../prisma";
 import { ERROR_CONSTANT } from "@/constants/error";
 import { _sendNotification } from "../notification";
 
+
 export const getContact = async () => {
     const { data } = await checkAuth();
     try {

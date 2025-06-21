@@ -73,6 +73,7 @@ export const ChatCard = ({ contact }: { contact: any }) => {
                                     src={!!contact?.avatar ? contact?.avatar : null}
                                     alt='avatar'
                                     className='h-full w-full top-0 bottom-0 object-cover left-0 right-0 absolute object-center'
+
                               />
                         </div>
                         <div className='ml-4'>
