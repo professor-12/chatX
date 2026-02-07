@@ -72,9 +72,9 @@ export const createuser = async (prevstate: User, data: FormData) => {
                         username: "",
                     },
                 },
-                groupMember: {
-                    connect: { id: "cmaccpl140000horw6zhua9tt" },
-                },
+                // groupMember: {
+                //     connect: { id: "cmaccpl140000horw6zhua9tt" },
+                // },
             },
         });
         const session = await prisma.session.create({
@@ -178,7 +178,7 @@ export const checkAuth = async (): Promise<
     } catch (err) {
         console.log(err.message);
         if (err instanceof Error && err.message === "UNAUTHORIZED_ACCESS") {
-            redirect("/login");
+             ("/login");
         }
         
         return { error: ERROR_CONSTANT.INTERNAL_SERVER_ERROR, data: null };

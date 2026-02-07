@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 const protectedRoutes = ["/home"];
 const authRestrictedRoutes = ["/login", "/signup"];
 
-export async function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
     const token = request.cookies.get("token")?.value;
 

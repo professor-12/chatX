@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = dev ? "localhost" : "0.0.0.0";
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 const app = next({ dev, hostname, port: port as number });
 const handler = app.getRequestHandler();
@@ -53,7 +53,7 @@ app.prepare().then(() => {
             console.log(err);
             process.exit(1);
         })
-        .listen(port, "0.0.0.0", () => {
-            console.log(`> Ready on http://0.0.0.0:${port}`);
+        .listen(port, hostname, () => {
+            console.log(`> Ready on http://${hostname}:${port}`);
         });
 });
